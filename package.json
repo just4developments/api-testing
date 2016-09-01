@@ -4,11 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "node ./src/index.js"
+    "test": "node ./src/index.js test",
+    "doc": "node ./src/index.js doc"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "async": "^2.0.1",
+    "console-group": "^0.2.1",
     "unirest": "^0.5.1"
   }
 }

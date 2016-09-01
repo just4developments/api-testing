@@ -1,4 +1,5 @@
 var unirest = require('unirest');
+var Utils = require('../helper/utils');
 
 class Checker {
 
@@ -77,37 +78,41 @@ class Checker {
 
 module.exports = class Api extends Checker {
 
-  constructor(config) {
+  constructor(config, defaultConfig = {}) {
     super();
-    this.config = config;
+    this.config = Utils.assign(defaultConfig, config);
+    if(this.config.sleep === undefined) this.config.sleep = 0;
     if (!this.config.method) {
       var i = this.config.url.indexOf(' ');
       this.config.method = this.config.url.substr(0, i);
       this.config.url = this.config.url.substr(i + 1);
     }
     this.config.method = this.config.method.toLowerCase();
-    if (this.config.checker) this.config.checker.parser = (this.config.checker.parser || 'json').toLowerCase();
+    this.config.url = this.applyValue(this.config.url);
+    if (this.config.header) this.config.header = this.applyValue(this.config.header);
+    if (this.config.checker) {      
+      for(var i in this.config.checker){
+        this.config.checker[i] = this.applyValue(this.config.checker[i]);
+      }
+    }
   }
 
   applyValue(a) {
-    if (a instanceof Array) {
+    if ((a instanceof Array) || (a instanceof Object)) {
       for (var i = 0; i < a.length; i++) {
         a[i] = this.applyValue(a[i]);
       }
-    } else if (a instanceof Object) {
-      a = this.applyValue(a);
-    } else if (typeof a === 'string') {
-      var m = a.match(/^\$\{([^}]+)\}$/g);
-      if(m){
-        var vname = m[i].match(/\$\{(\w+)\}/)[1];
-        a = eval(`global.var.${vname}.`);
-      }else {
-        m = a.match(/\$\{([^}]+)\}/);
-        if (m) {
-          for (var i in m) {
-            var vname = m[i].match(/\$\{([^}]+)\}/)[1];
-            a = a.replace(m[i], eval(`global.var.${vname}`));
-          }
+    } else if (a !== undefined && a !== null && a.length > 0 && typeof a === 'string') {
+      var m = a.match(/^\$\{([^}]+)\}$/);
+      if (m) {
+        var vname = m[1];
+        a = eval(`global.var.${vname}`);
+      } else {
+        var r = /\$\{([^}]+)\}/g;
+        var m;
+        while ((m = r.exec(a)) !== null) {
+          var vname = m[1];
+          a = a.replace(m[0], eval(`global.var.${vname}`));
         }
       }
     }
@@ -115,13 +120,7 @@ module.exports = class Api extends Checker {
   }
 
   checker(res) {
-    this.config.content = res.raw_body;
-    if ('json' === this.config.parser) this.config.content = JSON.parse(this.config.content);
-    // TODO: ...... HERE
-    console.log('aaaaaaaaaaa', this.config.var);
-    if (this.config.var) {      
-      global.var[this.config.var] = this.config.content;
-    }
+    if('test' !== global.action) return;
     if (this.config.checker) {
       if (this.config.checker.status) {
         if (!this.status(res.code)) {
@@ -133,57 +132,74 @@ module.exports = class Api extends Checker {
         }
       }
       if (this.config.checker.size !== undefined) {
-        if (this.config.content.length !== this.config.checker.size)
+        if (this.config['#body'].length !== this.config.checker.size)
           throw {
             mes: 'Check data size failed',
             expect: this.config.checker.size,
-            actual: this.config.content.length
+            actual: this.config['#body'].length
           };
       }
       if (this.config.checker.equals) {
-        if (!this.anyCompare(this.config.checker.equals, this.config.content))
-          throw 'Check data equals failed';
+        if (!this.anyCompare(this.config.checker.equals, this.config['#body']))
+          throw {
+            mes: 'Check data equals failed',
+            expect: this.config.checker.equals,
+            actual: this.config['#body']
+          };
       }
       if (this.config.checker['!equals']) {
-        if (this.anyCompare(this.config.checker['!equals'], this.config.content))
-          throw 'Check data no equals failed';
+        if (this.anyCompare(this.config.checker['!equals'], this.config['#body']))
+          throw {
+            mes: 'Check data no equals failed'
+          };
       }
       if (this.config.checker.contains) {
         if (!(this.config.checker.contains instanceof Array)) {
           this.config.checker.contains = [this.config.checker.contains];
         }
-        if (!this.arrayContains(this.config.content, this.config.checker.contains))
-          throw 'Check data contains failed';
+        if (!this.arrayContains(this.config['#body'], this.config.checker.contains))
+          throw {
+            mes: 'Check data contains failed'
+          };
       }
       if (this.config.checker['!contains']) {
         if (!(this.config.checker['!contains'] instanceof Array)) {
           this.config.checker['!contains'] = [this.config.checker['!contains']];
         }
-        if (!this.arrayNotContains(this.config.content, this.config.checker['!contains']))
-          throw 'Check data not contains failed';
+        if (!this.arrayNotContains(this.config['#body'], this.config.checker['!contains']))
+          throw {
+            mes: 'Check data not contains failed'
+          };
       }
       if (this.config.checker.in) {
         if (!(this.config.checker.in instanceof Array)) {
           this.config.checker.in = [this.config.checker.in];
         }
-        if (!this.arrayContains(this.config.checker.in, this.config.content))
-          throw 'Check data in failed';
+        if (!this.arrayContains(this.config.checker.in, this.config['#body']))
+          throw {
+            mes: 'Check data in failed'
+          };
       }
       if (this.config.checker['!in']) {
         if (!(this.config.checker['!in'] instanceof Array)) {
           this.config.checker['!in'] = [this.config.checker['!in']];
         }
-        if (this.arrayNotContains(this.config.checker['!in'], this.config.content))
-          throw 'Check data not in failed';
+        if (this.arrayNotContains(this.config.checker['!in'], this.config['#body']))
+          throw {
+            mes: 'Check data not in failed'
+          };
       }
     }
   }
 
-  exec() {
-    console.log('a', global.var);
-    this.config.url = this.applyValue(this.config.url);
-    console.log(this.config.method.toUpperCase(), this.config.url);
+  exec(cb0) {
+    console.log(this.config.method.toUpperCase(), this.config.url, `(sleep ${this.config.sleep} ms)`);
     var self = this;
+    var cb = (err) => {
+      setTimeout(() => {
+        cb0(err, self.config);
+      }, this.config.sleep);      
+    };
     var req;
     if ('post' === this.config.method) {
       req = unirest.post(this.config.url);
@@ -198,15 +214,24 @@ module.exports = class Api extends Checker {
     } else {
       req = unirest.get(this.config.url);
     }
-    if (this.config.headers) req = req.headers(this.config.headers);
+    if (this.config.header) req = req.headers(this.config.header);    
     req.end(res => {
+      this.config["#status"] = res.code;
+      this.config['#header'] = res.headers;
+      this.config['#body'] = res.raw_body;
+      if ('json' === this.config.parser) this.config['#body'] = JSON.parse(this.config['#body']);      
+      if (this.config.var) {
+        global.var[this.config.var] = this.config['#body'];
+      }
       try {
         self.checker(res);
+        if (this.config.end) this.config.end(cb);
+        else cb();
       } catch (e) {
-        console.error(e);
+        this.config.error = e;
+        cb(e);
       }
-      if (this.config.end) this.config.end();
-    });
+    });    
   }
 
 }
