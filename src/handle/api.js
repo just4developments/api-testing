@@ -81,15 +81,23 @@ module.exports = class Api extends Checker {
   constructor(config, defaultConfig = {}) {
     super();
     this.config = Utils.assign(defaultConfig, config);
+    this.config.transform = this.config.transform.toLowerCase();
     if(this.config.sleep === undefined) this.config.sleep = 0;
     if (!this.config.method) {
       var i = this.config.url.indexOf(' ');
-      this.config.method = this.config.url.substr(0, i);
-      this.config.url = this.config.url.substr(i + 1);
+      if(i !== -1){
+        this.config.method = this.config.url.substr(0, i);
+        this.config.url = this.config.url.substr(i + 1);
+      }else{
+        this.config.method = 'get';
+      }
     }
     this.config.method = this.config.method.toLowerCase();
-    this.config.url = this.applyValue(this.config.url);
+    this.config.name = this.applyValue(this.config.name);
+    this.config.des = this.applyValue(this.config.des);
+    this.config.url = this.applyValue(this.config.url);    
     if (this.config.header) this.config.header = this.applyValue(this.config.header);
+    if(this.config.body) this.config.body = this.applyValue(this.config.body);
     if (this.config.checker) {      
       for(var i in this.config.checker){
         this.config.checker[i] = this.applyValue(this.config.checker[i]);
@@ -99,7 +107,7 @@ module.exports = class Api extends Checker {
 
   applyValue(a) {
     if ((a instanceof Array) || (a instanceof Object)) {
-      for (var i = 0; i < a.length; i++) {
+      for (var i in a) {
         a[i] = this.applyValue(a[i]);
       }
     } else if (a !== undefined && a !== null && a.length > 0 && typeof a === 'string') {
@@ -119,8 +127,7 @@ module.exports = class Api extends Checker {
     return a;
   }
 
-  checker(res) {
-    if('test' !== global.action) return;
+  checker(res) {    
     if (this.config.checker) {
       if (this.config.checker.status) {
         if (!this.status(res.code)) {
@@ -201,12 +208,40 @@ module.exports = class Api extends Checker {
       }, this.config.sleep);      
     };
     var req;
+    var body = Utils.assign({}, this.config.body);
+    var handleForm = () => {
+      var files;
+      for(var k in body){			
+        if(k.indexOf('file:') === 0){
+          var key = k.substr('file:'.length);
+          if(!files) files = {};
+          files[key] = body[k];
+          delete body[k];
+        }
+      }
+      if(files){
+        for(var k in files){
+          if(files[k] instanceof Array){
+            for(var i in files[k]){
+              req = req.attach(k, files[k][i]);
+            }
+          }else{
+            req = req.attach(k, files[k]);
+          }
+        }
+        for(var k in body){
+          req = req.field(k, body[k]);
+        }		
+      }
+    };
     if ('post' === this.config.method) {
-      req = unirest.post(this.config.url);
-      req = req.send(JSON.stringify(body));
+      req = unirest.post(this.config.url);      
+      if('form' === this.config.transform) handleForm();
+      else req = req.send(JSON.stringify(body));  
     } else if ('put' === this.config.method) {
       req = unirest.put(this.config.url);
-      req = req.send(JSON.stringify(body));
+      if('form' === this.config.transform) handleForm();
+      else req = req.send(JSON.stringify(body));
     } else if ('delete' === this.config.method) {
       req = unirest.delete(this.config.url);
     } else if ('head' === this.config.method) {
@@ -216,19 +251,17 @@ module.exports = class Api extends Checker {
     }
     if (this.config.header) req = req.headers(this.config.header);    
     req.end(res => {
-      this.config["#status"] = res.code;
-      this.config['#header'] = res.headers;
-      this.config['#body'] = res.raw_body;
-      if ('json' === this.config.parser) this.config['#body'] = JSON.parse(this.config['#body']);      
-      if (this.config.var) {
-        global.var[this.config.var] = this.config['#body'];
-      }
+      self.config["#status"] = res.code;
+      self.config['#header'] = res.headers;
+      self.config['#body'] = res.body;
+      // if ('json' === self.config.parser) self.config['#body'] = JSON.parse(self.config['#body']);      
+      if (self.config.var) global.var[self.config.var] = self.config['#body'];
       try {
-        self.checker(res);
-        if (this.config.end) this.config.end(cb);
+        if('test' === global.action) self.checker(res);
+        if (self.config.end) self.config.end(cb);
         else cb();
       } catch (e) {
-        this.config.error = e;
+        self.config.error = e;
         cb(e);
       }
     });    

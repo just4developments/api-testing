@@ -1,0 +1,7 @@
+POST http://localhost:61188/user/thanh
+Content-Type: application/json
+
+{
+  "a": 1,
+  "b": 2
+}

@@ -1,11 +1,14 @@
 module.exports = {
   name: "Test cuisine",
+  var: {
+    host: 'http://localhost:61188'
+  },
   default: {
     api: {
       header: {
         "content-type": "application/json"
       },
-      parser: "json",
+      transform: "json",
       checker: {
         status: 100
       }

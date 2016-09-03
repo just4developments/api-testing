@@ -3,18 +3,20 @@ exports = module.exports = {
     {'cuisine': 'Document for cuisine APIs'}
   ],
   describe: {
-    cuisine: {
-      "id":"Cuisine ID",
-      "des":"Cuisine description",
-      "name":"Cuisine name"
+    address: {
+      "#": "Thong tin duong pho",
+      street: "Duong pho"  
     },
-    cuisines: [
-      {
-        "id":"Cuisine ID",
-        "des":"Cuisine description",
-        "name":"Cuisine name"
-      }
-    ],
+    user: {
+      "#": "Thong tin user",
+      "name": "<<float>>Ten user",
+      "age": "Tuoi user",
+      "address": "${address}"
+    },
+    users: {
+      "#": "List user",
+      "${user}": undefined
+    },
     "req.header": {
       "content-type": "Loai header"
     },

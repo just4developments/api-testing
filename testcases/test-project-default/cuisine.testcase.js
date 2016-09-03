@@ -1,41 +1,100 @@
 module.exports = {
   des: "All api for cuisine",
+  var: {
+    // host: 'abc.com' //overide var in main
+  },
   default: {
     checker: {
       status: 200
     }
   },
-  apis: [{    
-    name: "Get list cuisine",
-    des: "",
-    url: "GET http://173.164.244.85:4000/whatseat/cuisine",
-    var: "cuisineList",
-    doc: {_body: "cuisines", "#body": "cuisines", header: "req.header", "#header": "res.header", group: "place", "order": 2},
-    checker: {
-      status: 200,
-      size: 20, 
-      contains: undefined,
-      equals: undefined,
-      in: undefined,
-      "!in": undefined,
-      "!equals": undefined,
-      "!contains": [{"id":"17edc0515-46c3-4581-b778-4f5343e64dcd","des":"","name":"Asian"}]
+  apis: [{
+    name: "Upload file",
+    des: "Test upload file",
+    url: "POST http://173.164.244.85:4000/whatseat/account/upload",
+    transform: "form", // form || json
+    header: {
+      "content-type": "multipart/form-data"
     },
-    sleep: 2000
-  },{
-    name: "Get details cuisine",
-    url: "GET http://173.164.244.85:4000/whatseat/cuisine/${cuisineList[0].id}",
-    header: {},
-    body: undefined,
-    var: "cuisineList1",
-    doc: {body: "cuisine", "#body": "cuisine", header: "req.header", "#header": "res.header", group: "cuisine", "order": 1},
+    body: {
+      name: 'file test',
+      "file:avatar": 'C:\\Users\\thanh_xps13\\Desktop\\vephat.jpg'
+    },
+    //var: "",
+    // doc: {"#body": "users", header: "req.header", "#header": "res.header", group: "place", "order": 2},
+    // checker: {
+    status: [200]
+      //size: 20,
+      //contains: undefined,
+      // equals: {
+      //   name: "nana",
+      //   age: 1
+      // }
+      //in: undefined,
+      //"!in": undefined,
+      //"!equals": undefined,
+      //"!contains": []
+      // }
+      //sleep: 0
+      // disabled: true
+  }, {
+    name: "get test",
+    des: "get test des",
+    url: "GET ${host}/user",
+    //var: "",
+    doc: {
+      "#body": "users",
+      header: "req.header",
+      "#header": "res.header",
+      group: "place",
+      "order": 2
+    },
+    // checker: {
+    //status: [200],
+    //size: 20,
+    //contains: undefined,
+    // equals: {
+    //   name: "nana",
+    //   age: 1
+    // }
+    //in: undefined,
+    //"!in": undefined,
+    //"!equals": undefined,
+    //"!contains": []
+    // }
+    //sleep: 0
+    // disabled: true
+  }, {
+    name: "test",
+    des: "test",
+    url: "POST ${host}/user/thanh",
+    body: {
+      name: "${host}",
+      age: 1
+    },
+    //var: "",
+    doc: {
+      body: "user",
+      "#body": "user",
+      header: "req.header",
+      "#header": "res.header",
+      group: "place",
+      "order": 2
+    },
     checker: {
-      contains: undefined,
-      equals: "${cuisineList[0]}",
-      in: undefined,
-      "!in": undefined,
-      "!equals": undefined,
-      "!contains": undefined
-    }
+      //status: [200],
+      //size: 20,
+      //contains: undefined,
+      equals: {
+        name: "nana",
+        age: 1
+      }
+      //in: undefined,
+      //"!in": undefined,
+      //"!equals": undefined,
+      //"!contains": []
+    },
+    //sleep: 0
+    // disabled: true
   }]
 }
