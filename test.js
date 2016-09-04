@@ -1,4 +1,4 @@
-var doc = require('./testcases/test-project-default/_doc');
+var doc = require('./projects/test/_doc');
 
 var getType = (value)=>{
   if(typeof value === 'number'){

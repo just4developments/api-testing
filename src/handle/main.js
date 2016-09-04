@@ -10,7 +10,7 @@ module.exports = class Main {
     this.config.path = pathProject;
     if(this.config.var) global.var = this.config.var;
     for (var i in this.config.testcases) {
-      this.config.testcases[i] = require(`../${pathProject}/${this.config.testcases[i]}.testcase`);
+      this.config.testcases[i] = require(`../${pathProject}/testcases/${this.config.testcases[i]}`);
     }
   }
 

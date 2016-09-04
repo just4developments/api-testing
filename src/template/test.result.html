@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+  <html lang="en" ng-app="myApp">
+
+  <head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.2.0/material.teal-red.min.css" />
+    <script defer src="https://code.getmdl.io/1.2.0/material.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
+    <style>
+      .a {
+        cursor: pointer;
+      }
+      .mdl-chip__contact.total {
+        background-color: #333;
+        color: white;
+      }
+      .mdl-chip__contact.doc {
+        background-color: #3a97ff;
+        color: white;
+      }
+      .mdl-chip__contact.passed {
+        background-color: #4cd676;
+        color: white;
+      }
+      .mdl-chip__contact.failed {
+        background-color: red;
+        color: white;
+      }
+      .mdl-chip--contact.actived {
+        zoom: 1.5;
+      }
+      .error {
+        color: red;
+      }
+      .passed {
+        color: #4cd676;
+      }
+      .failed {
+        color: red;
+      }
+      .api-method {
+        text-transform: uppercase;        
+      }
+      .api-method.head {
+        color: #61c1c1;
+      }
+      .api-method.get {
+        color: #c694ff;
+      }
+      .api-method.post {
+        color: #ff7272;
+      }
+      .api-method.put {
+        color: #ffac65;
+      }
+      .api-method.delete {
+        color: #636363;
+      }
+      .second {
+        color: #b9b9b9;
+      }
+      table tbody tr:nth-child(even) {
+        background-color: #f3f3f3;
+      }
+
+      table tbody tr:nth-child(even):hover{
+        background-color: #f3f3f3;
+      }
+      .opened {
+        background-color: #e7e7e7;
+      }
+      .mdl-badge.mdl-badge--overlap.doc:after {
+        color: white;
+        background-color: #3a97ff;
+        zoom: 50%;
+        left: -2px;
+        top: -2px;
+      }
+      .mdl-card {
+        min-height: auto;
+      }
+      .mtable thead tr{
+        background: #dedede;
+        background: -webkit-linear-gradient(#f3f3f3, #dedede);
+        background: -o-linear-gradient(#f3f3f3, #dedede);
+        background: -moz-linear-gradient(#f3f3f3, #dedede);
+        background: linear-gradient(#f3f3f3, #dedede);
+      }
+      select {
+        padding: 5px;
+        border-radius: 5px;
+      }
+      dialog {
+        width: 80% !important;
+      }
+      .mdl-tabs{
+        min-height: 250px;
+      }
+      .demo-card-wide {
+        margin-bottom: 20px;
+      }
+      @keyframes example {
+        from {
+          -ms-transform: rotate(0deg); /* IE 9 */
+          -webkit-transform: rotate(0deg); /* Chrome, Safari, Opera */
+          transform: rotate(0deg);
+        }
+        to {
+          -ms-transform: rotate(-360deg); /* IE 9 */
+          -webkit-transform: rotate(-360deg); /* Chrome, Safari, Opera */
+          transform: rotate(-360deg);
+        }
+      }
+      .loading {
+        animation-name: example;			
+        animation-duration: 0.2s;
+        animation-iteration-count: infinite;
+        animation-timing-function: linear;
+      }
+    </style>
+  </head>
+
+  <body ng-controller="MainCtrl as ctrl">
+    <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored" ng-click="ctrl.showBookmark()" style="position: fixed; top: 10px; right: 30px; z-index: 10;">
+      <i class="material-icons">subject</i>
+    </button>
+    <dialog class="mdl-dialog">
+      <h4 class="mdl-dialog__title">APIs in the project</h4>
+      <hr/>
+      <div class="mdl-dialog__content">
+        <nav class="mdl-navigation">
+          <div ng-repeat="tc in ctrl.data.testcases">
+            <h5>{{tc.des}}</h5>
+            <ul style="list-style-type: decimal;">
+              <a href="#{{$parent.$index}}-{{$index}}" ng-repeat="api in tc.apis" ng-click="ctrl.toBookmark()">
+                <li>                
+                  {{api.des}}
+                </li>
+              </a>
+            </ul>  
+          </div>
+        </nav>
+      </div>
+    </dialog>
+    <div class="mdl-layout mdl-js-layout">
+      <main class="mdl-layout__content">
+        <div class="demo-card-wide mdl-card mdl-shadow--0dp" style="width: 100%">
+          <div class="mdl-card__title" style="text-transform: capitalize;">
+            <div>
+              <div class="mdl-card__title-text"><i class="material-icons">bubble_chart</i> {{ctrl.data.name}}</div>
+              <div class="mdl-card__subtitle-text">Time execution: {{ctrl.data.duration | number}} ms</div>
+            </div>
+          </div>
+          <div class="mdl-card__supporting-text">
+            <div>
+              <span class="mdl-chip mdl-chip--contact a" ng-click="ctrl.filter=0;" ng-class="{'actived': !ctrl.filter}">
+                  <span class="mdl-chip__contact total">{{ctrl.passed + ctrl.failed}}</span>
+                  <span class="mdl-chip__text">Total</span>
+              </span>
+              <span class="mdl-chip mdl-chip--contact a" ng-click="ctrl.filter=1;" ng-class="{'actived': ctrl.filter==1}">
+                  <span class="mdl-chip__contact passed">{{ctrl.passed}}</span>
+                  <span class="mdl-chip__text">Passed</span>
+              </span>
+              <span class="mdl-chip mdl-chip--contact a" ng-click="ctrl.filter=-1;" ng-class="{'actived': ctrl.filter==-1}">
+                  <span class="mdl-chip__contact failed">{{ctrl.failed}}</span>
+                  <span class="mdl-chip__text">Failed</span>
+              </span>
+              <span class="mdl-chip mdl-chip--contact a" ng-click="ctrl.filter=2;" ng-class="{'actived': ctrl.filter==2}">
+                  <span class="mdl-chip__contact doc">{{ctrl.doc}}</span>
+                  <span class="mdl-chip__text">DOC</span>
+              </span>
+            </div>
+          </div>
+        </div>
+        <br/><br/>
+        <div class="demo-card-wide mdl-card mdl-shadow--2dp" ng-repeat="tc in ctrl.data.testcases" ng-init="tc.passed=0; tc.failed=0;" style="width: 100%;">
+          <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp mtable" width="100%">
+            <thead>
+              <tr>
+                <th class="mdl-data-table__cell--non-numeric" colspan="3" style="color: #2f7252" title="{{tc.des}}">
+                  <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 400px;">
+                    <i class="material-icons" style="position: relative; top: 7px">blur_on</i> {{tc.des}}
+                  </div>
+                </th>
+                <th width="1">Status</th>
+                <th class="mdl-data-table__cell--non-numeric" width="1">Variable</th>
+                <th class="mdl-data-table__cell--non-numeric">Error</th>
+              </tr>
+            </thead>
+            <tbody ng-repeat="api in tc.apis" id="{{$parent.$index}}-{{$index}}">
+              <tr ng-click="api.isShowMore=!api.isShowMore;" ng-class="{'opened': api.isShowMore}" class="a" ng-show="!ctrl.filter || (ctrl.filter == 1 && !api.error) || (ctrl.filter == -1 && api.error) || (ctrl.filter == 2 && api.doc)">
+                <td class="mdl-data-table__cell--non-numeric" width="1">
+                  <div class="material-icons mdl-badge mdl-badge--overlap doc passed" data-badge="D" title="Export to DOC" ng-if="api.doc && !api.error" ng-init="tc.passed=tc.passed+1; ctrl.passed=ctrl.passed+1; ctrl.doc=ctrl.doc+1;">grain</div>
+                  <div class="material-icons mdl-badge mdl-badge--overlap doc failed" data-badge="D" title="Export to DOC" ng-if="api.doc && api.error" ng-init="tc.failed=tc.failed+1; ctrl.failed=ctrl.failed+1; ctrl.doc=ctrl.doc+1;">grain</div>
+                  <i class="material-icons passed" ng-if="!api.doc && !api.error" ng-init="tc.passed=tc.passed+1; ctrl.passed=ctrl.passed+1;">grain</i>
+                  <i class="material-icons failed" ng-if="!api.doc && api.error" ng-init="tc.failed=tc.failed+1; ctrl.failed=ctrl.failed+1;">grain</i>          
+                </td>
+                <td class="mdl-data-table__cell--non-numeric api-method" ng-class="api.method" width="1">
+                  <b>{{api.method}}</b>            
+                </td>
+                <td class="mdl-data-table__cell--non-numeric" width="1" style="text-transform: capitalize;">
+                  <button ng-click="api.isShowMore=!api.isShowMore; ctrl.replay(api)" ng-disabled="api.isReplay" ng-class="{'loading': api.isReplay}" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored" style="float: left; zoom: 50%; margin-right: 8px;">
+                    <i class="material-icons">replay</i>
+                  </button>
+                  <div ng-if="ctrl.filter != 2">{{api.des}}</div>
+                  <div ng-if="ctrl.filter == 2">{{api.name}}</div>
+                  <div><small class="second">{{api.url}}</small></div>
+                </td>
+                <td ng-class="{'passed': !api.error, 'failed': api.error}">
+                  {{api["#status"]}}
+                  <div><small class="second">{{api.duration | number}} ms</small></div>
+                </td>
+                <td class="mdl-data-table__cell--non-numeric"><b>{{api.var}}</b></td>
+                <td class="mdl-data-table__cell--non-numeric error">{{api.error.mes}}</td>
+              </tr>
+              <tr ng-show="api.isShowMore">
+                <td colspan="6" class="mdl-data-table__cell--non-numeric">
+                  <div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect" align="left">
+                    <div class="mdl-tabs__tab-bar" style="display: block;">
+                      <a href="#request-panel" class="mdl-tabs__tab is-active">Request</a>
+                      <a href="#response-panel" class="mdl-tabs__tab">Response</a>
+                      <a href="#checker-panel" class="mdl-tabs__tab" ng-if="api.checker">Checker</a>
+                      <a href="#variable-panel" class="mdl-tabs__tab" ng-if="api.var">Variable</a>
+                    </div>
+                    <div class="mdl-tabs__panel is-active" id="request-panel">
+                      <!--<a href="javascript: void(0)" ng-click="api.isShowReqHeader = !api.isShowReqHeader;">Request header</a>-->
+                      <pre>{{api.header | header}}</pre>
+                      <hr/>
+                      <pre>{{api.body | json}}</pre>
+                    </div>
+                    <div class="mdl-tabs__panel" id="response-panel">
+                      <pre>--------------<br/>| <b>STATUS: {{api["#status"]}}</b><br/>--------------</pre>
+                      <a href="javascript: void(0)" ng-click="api.isShowResHeader = !api.isShowResHeader;">Response header</a>
+                      <pre ng-show="api.isShowResHeader">{{api["#header"] | header}}</pre>
+                      <hr ng-show="api.isShowResHeader"/>
+                      <pre>{{api["#body"] | json}}</pre>
+                    </div>
+                    <div class="mdl-tabs__panel" id="checker-panel">
+                      <pre>{{api.checker | json}}</pre>
+                    </div>
+                    <div class="mdl-tabs__panel" id="variable-panel">
+                      <pre><b>var {{api.var}} = </b>{{api["#var"] | json}}</pre>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="mdl-card__menu">
+            <small class="passed">{{tc.passed}} passed</small>, 
+            <small class="failed">{{tc.failed}} failed</small>
+          </div>
+        </div>
+      </main>
+    </div>
+  </body>
+  <script type="text/javascript">
+    angular.module('myApp', [])
+    .filter('header', function() {
+      return function(input) {
+        var str = "";
+        for(var i in input){
+          str += '"' + i + '": "' + input[i] + '"\n';
+        }
+        return str;
+      };
+    }).controller('MainCtrl', ['$scope', function MainCtrl($scope) {
+      var dialog = document.querySelector('dialog');
+      this.replay = (api) => {
+        api.isReplay = true;
+        setTimeout(() => {
+          $scope.$apply(()=>{
+            api.isReplay = false;
+          });          
+        }, 2000);
+      }
+      this.showBookmark = () => {
+        dialog.showModal();
+      };
+      this.toBookmark = ()=>{
+        dialog.close();
+      }
+      this.data = $data;
+  }]);
+  </script>
+
+  </html>

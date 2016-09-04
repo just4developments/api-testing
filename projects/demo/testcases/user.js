@@ -41,7 +41,7 @@ module.exports = {
     name: "get test",
     des: "get test des",
     url: "GET ${host}/user",
-    //var: "",
+    var: "userList",
     doc: {
       "#body": "users",
       header: "req.header",
@@ -67,11 +67,8 @@ module.exports = {
   }, {
     name: "test",
     des: "test",
-    url: "POST ${host}/user/thanh",
-    body: {
-      name: "${host}",
-      age: 1
-    },
+    url: "PUT ${host}/user/thanh",
+    body: "${userList[0]}",
     //var: "",
     doc: {
       body: "user",
@@ -79,6 +76,65 @@ module.exports = {
       header: "req.header",
       "#header": "res.header",
       group: "place",
+      "order": 2
+    },
+    checker: {
+      status: 404,
+      //size: 20,
+      //contains: undefined,
+      // equals: {
+      //   name: "nana",
+      //   age: 1
+      // }
+      //in: undefined,
+      //"!in": undefined,
+      //"!equals": undefined,
+      //"!contains": []
+    },
+    //sleep: 0
+    // disabled: true
+  }, {
+    name: "test head",
+    des: "test",
+    url: "HEAD ${host}/user/thanh",
+    body: "${userList[0]}",
+    //var: "",
+    doc: {
+      body: "user",
+      "#body": "user",
+      header: "req.header",
+      "#header": "res.header",
+      group: "group 1",
+      "order": 2
+    },
+    checker: {
+      status: [200, 404],
+      //size: 20,
+      //contains: undefined,
+      // equals: {
+      //   name: "nana",
+      //   age: 1
+      // }
+      //in: undefined,
+      //"!in": undefined,
+      //"!equals": undefined,
+      //"!contains": []
+    },
+    //sleep: 0
+    // disabled: true
+  }, 
+  {
+    name: "test delete",
+    des: "test",
+    url: "DELETE ${host}/user/thanh",
+    body: "${userList[0]}",
+    //var: "",
+    doc: {
+      body: "user",
+      "#body": "user",
+      header: "req.header",
+      "#header": "res.header",
+      group: "group 1",
       "order": 2
     },
     checker: {

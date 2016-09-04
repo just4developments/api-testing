@@ -5,7 +5,7 @@ class Checker {
 
   status(status) {
     if (status) {
-      if (status instanceof Array) return status.indexOf(this.config.checker.status) !== -1;
+      if (this.config.checker.status instanceof Array) return this.config.checker.status.indexOf(status) !== -1;
       return status === this.config.checker.status;
     }
     return true;
@@ -249,13 +249,20 @@ module.exports = class Api extends Checker {
     } else {
       req = unirest.get(this.config.url);
     }
-    if (this.config.header) req = req.headers(this.config.header);    
+    if (this.config.header) req = req.headers(this.config.header);  
+    var startTime = new Date().getTime();  
     req.end(res => {
+      self.config.duration = new Date().getTime() - startTime;
+      if(!res.code){
+        self.config["#status"] = res.error.code;
+        self.config.error = res.error.message;
+        return cb(res.error);
+      }
       self.config["#status"] = res.code;
       self.config['#header'] = res.headers;
       self.config['#body'] = res.body;
       // if ('json' === self.config.parser) self.config['#body'] = JSON.parse(self.config['#body']);      
-      if (self.config.var) global.var[self.config.var] = self.config['#body'];
+      if (self.config.var) self.config["#var"] = global.var[self.config.var] = { header: self.config['#header'], body: self.config['#body'] };
       try {
         if('test' === global.action) self.checker(res);
         if (self.config.end) self.config.end(cb);

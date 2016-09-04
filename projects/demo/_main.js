@@ -1,5 +1,6 @@
 module.exports = {
   name: "Test cuisine",
+  browser: "chrome", // chrome, firefox, undefined is default browser
   var: {
     host: 'http://localhost:61188'
   },
@@ -17,5 +18,5 @@ module.exports = {
       
     }
   },
-  testcases: ['cuisine']
+  testcases: ['user']
 }
