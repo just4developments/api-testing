@@ -7,13 +7,13 @@ var projectname = process.argv[3];
 var files = fs.readdirSync(__dirname + '/../projects/');
 for (var name of files){
   if(!projectname){
-    var m = name.match(/(.*?)\.run$/);
+    var m = name.match(/(.*?)\.default$/);
     if(m) projectname = m[1]; 
   }
 }
 if(!projectname) throw '# Not found project to run testcase';
 
-console.info(`############### PROJECT: ${projectname.replace('-default', '')} ###############`);
+console.info(`############### PROJECT: ${projectname} ###############`);
 console.info('');
 var main = new Main(`../projects/${projectname}`);
 var startTime = new Date().getTime();

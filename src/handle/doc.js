@@ -84,7 +84,7 @@ module.exports = class Doc {
     try{
       var rs = [];
       var temp;
-      var pathVersion = path.join(__dirname, '..', this.config.path, '_version.http');
+      var pathVersion = path.join(__dirname, '..', this.config.path, '_version.ini');
       var rl = readline.createInterface({
         input: fs.createReadStream(pathVersion)
       });
