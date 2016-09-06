@@ -68,7 +68,7 @@ module.exports = {
     name: "test",
     des: "test",
     url: "PUT ${host}/user/thanh",
-    body: "${userList[0]}",
+    body: "${userList.body[0]}",
     //var: "",
     doc: {
       body: "user",
@@ -97,7 +97,7 @@ module.exports = {
     name: "test head",
     des: "test",
     url: "HEAD ${host}/user/thanh",
-    body: "${userList[0]}",
+    body: "${userList.body[0]}",
     //var: "",
     doc: {
       body: "user",
@@ -124,9 +124,10 @@ module.exports = {
     // disabled: true
   }, 
   {
+    declare: "user-delete",
     name: "test delete",
     des: "test",
-    url: "DELETE ${host}/user/thanh",
+    url: "DELETE ${host}/user/${userList.body[0].name}",
     //var: "",
     doc: {
       body: "user",
@@ -150,6 +151,9 @@ module.exports = {
       //"!contains": []
     },
     //sleep: 0
-    // disabled: true
+    disabled: true
+  }, {
+    extends: "user-delete",
+    name: "test delete extendsion"
   }]
 }

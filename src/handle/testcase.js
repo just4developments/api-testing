@@ -13,16 +13,21 @@ module.exports = class Testcase {
 
   exec(cb){
     var tasks = [];
-    for(var i =this.config.apis.length-1; i>=0; i--){
+    var i = 0;
+    while(i<this.config.apis.length){
+      var api = new Api(this.config.apis[i], this.config.default);
+
       if(this.config.apis[i].disabled) {
         this.config.apis.splice(i, 1);
         continue;
       }
-      tasks.splice(0, 0, ((apiConfig, defaultConfigApi, cb) => {
-        var api = new Api(apiConfig, defaultConfigApi);
+      
+      this.apis.push(api);
+      tasks.push(((api, cb) => {
         api.exec(cb);
-        this.apis.push(api);
-      }).bind(null, this.config.apis[i], this.config.default));
+      }).bind(null, api));
+
+      i++;
     }
     async.series(tasks, (err, rs) => {
       for(var i in rs){

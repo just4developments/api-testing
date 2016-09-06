@@ -76,10 +76,14 @@ class Checker {
   }
 }
 
-module.exports = class Api extends Checker {
+class Api extends Checker {
 
   constructor(config, defaultConfig = {}) {
     super();
+    if(config.extends && config.extends.length > 0){
+      defaultConfig = Api.templates[config.extends];
+      if(!config) throw `API template "${config.extends}" is not declared yet to extends`;
+    }
     this.config = Utils.assign(defaultConfig, config);
     this.config.transform = this.config.transform.toLowerCase();
     if(this.config.sleep === undefined) this.config.sleep = 0;
@@ -93,9 +97,15 @@ module.exports = class Api extends Checker {
       }
     }
     this.config.method = this.config.method.toLowerCase();
+
+    if(this.config.declare && this.config.declare.length > 0){
+      Api.templates[this.config.declare] = Utils.assign({}, this.config);
+      delete Api.templates[this.config.declare].disabled;
+    }
+
     this.config.name = this.applyValue(this.config.name);
     this.config.des = this.applyValue(this.config.des);
-    this.config.url = this.applyValue(this.config.url);    
+    this.config.url = this.applyValue(this.config.url);
     if (this.config.header) this.config.header = this.applyValue(this.config.header);
     if(this.config.body) this.config.body = this.applyValue(this.config.body);
     if (this.config.checker) {      
@@ -133,14 +143,13 @@ module.exports = class Api extends Checker {
           }
         }
       }
-      return a;
     }catch(e){
       this.config.error = {
         mes: e
       };
       console.error(e);      
     }
-    return undefined;
+    return a;
   }
 
   checker(res) {    
@@ -307,5 +316,6 @@ module.exports = class Api extends Checker {
       }
     }); 
   }
-
 }
+Api.templates = {};
+module.exports = Api;
