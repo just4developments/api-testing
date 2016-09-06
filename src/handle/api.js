@@ -106,25 +106,41 @@ module.exports = class Api extends Checker {
   }
 
   applyValue(a) {
-    if ((a instanceof Array) || (a instanceof Object)) {
-      for (var i in a) {
-        a[i] = this.applyValue(a[i]);
-      }
-    } else if (a !== undefined && a !== null && a.length > 0 && typeof a === 'string') {
-      var m = a.match(/^\$\{([^}]+)\}$/);
-      if (m) {
-        var vname = m[1];
-        a = eval(`global.var.${vname}`);
-      } else {
-        var r = /\$\{([^}]+)\}/g;
-        var m;
-        while ((m = r.exec(a)) !== null) {
+    try{
+      if ((a instanceof Array) || (a instanceof Object)) {
+        for (var i in a) {
+          a[i] = this.applyValue(a[i]);
+        }
+      } else if (a !== undefined && a !== null && a.length > 0 && typeof a === 'string') {
+        var m = a.match(/^\$\{([^}]+)\}$/);
+        if (m) {
           var vname = m[1];
-          a = a.replace(m[0], eval(`global.var.${vname}`));
+          try{
+            a = eval(`global.var.${vname}`);
+          }catch(e){
+            throw `Variable "${vname}" is not defined`;
+          }
+        } else {
+          var r = /\$\{([^}]+)\}/g;
+          var m;
+          while ((m = r.exec(a)) !== null) {
+            var vname = m[1];
+            try{
+              a = a.replace(m[0], eval(`global.var.${vname}`));
+            }catch(e){
+              throw `Variable "${vname}" is not defined`;
+            }
+          }
         }
       }
+      return a;
+    }catch(e){
+      this.config.error = {
+        mes: e
+      };
+      console.error(e);      
     }
-    return a;
+    return undefined;
   }
 
   checker(res) {    
@@ -202,12 +218,20 @@ module.exports = class Api extends Checker {
   exec(cb0) {
     console.log(this.config.method.toUpperCase(), this.config.url, `(sleep ${this.config.sleep} ms)`);
     var self = this;
+    var req;
     var cb = (err) => {
       setTimeout(() => {
         cb0(err, self.config);
       }, this.config.sleep);      
     };
-    var req;
+    var handleError = (err) =>{
+      if(this.config.nostop) return cb();
+      return cb(err);
+    };
+    if(this.config.error){
+      self.config.duration = 0;
+      return handleError(this.config.error);
+    }    
     var body = Utils.assign({}, this.config.body);
     var handleForm = () => {
       var files;
@@ -255,11 +279,21 @@ module.exports = class Api extends Checker {
       self.config.duration = new Date().getTime() - startTime;
       if(!res.code){
         self.config["#status"] = res.error.code;
-        self.config.error = res.error.message;
-        return cb(res.error);
+        self.config.error = {
+          mes: res.error.message
+        };
+        return handleError(res.error);
       }
       self.config["#status"] = res.code;
-      self.config['#header'] = res.headers;
+      if(self.config["cuz#header"] && self.config["cuz#header"].length > 0){
+        self.config['#header'] = {};
+        for(var k in res.headers){
+          if(self.config["cuz#header"].indexOf(k) !== -1){
+            self.config['#header'][k] = res.headers[k];
+          }
+        }
+      }
+
       self.config['#body'] = res.body;
       // if ('json' === self.config.parser) self.config['#body'] = JSON.parse(self.config['#body']);      
       if (self.config.var) self.config["#var"] = global.var[self.config.var] = { header: self.config['#header'], body: self.config['#body'] };
@@ -268,10 +302,10 @@ module.exports = class Api extends Checker {
         if (self.config.end) self.config.end(cb);
         else cb();
       } catch (e) {
-        self.config.error = e;
-        cb(e);
+        self.config.error = (e && e.mes) ? e : {mes: e};
+        return handleError(e);
       }
-    });    
+    }); 
   }
 
 }

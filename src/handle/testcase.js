@@ -5,6 +5,7 @@ var Utils = require('../helper/utils');
 module.exports = class Testcase {
 
   constructor(config, defaultConfig, defaultConfigApi = {}){
+    this.apis = [];
     this.config = Utils.assign(defaultConfig, config);
     this.config.default = Utils.assign(defaultConfigApi, this.config.default || {});
     global.var = Utils.assign(global.var, this.config.var);
@@ -20,6 +21,7 @@ module.exports = class Testcase {
       tasks.splice(0, 0, ((apiConfig, defaultConfigApi, cb) => {
         var api = new Api(apiConfig, defaultConfigApi);
         api.exec(cb);
+        this.apis.push(api);
       }).bind(null, this.config.apis[i], this.config.default));
     }
     async.series(tasks, (err, rs) => {

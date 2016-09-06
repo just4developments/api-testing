@@ -4,6 +4,13 @@ var bodyParser = require('body-parser')
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
+app.use((req, res, next) => {
+  res.set('Access-Control-Allow-Origin', '*');
+  res.set('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, HEAD, PUT');
+  res.set('Access-Control-Allow-Headers', 'X-Requested-With');
+  next();
+});
+
 app.get('/user', function (req, res) {
   res.send([
     {"name": "thanh", "age": 28, "address": { "street": "Luong yen"}},
@@ -16,6 +23,6 @@ app.post('/user/:name', (req, res) => {
   res.send(req.body);
 })
 
-app.listen(61188, function () {
-  console.log('Example app listening on port 61188!');
+app.listen(61189, function () {
+  console.log('Example app listening on port 61189!');
 });

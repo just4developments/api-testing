@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+  <html lang="en" ng-app="myApp">
+
+  <head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.2.0/material.teal-red.min.css" />
+    <style>
+      body * {
+        font-family: monospace,"sans-serif";
+      }
+      footer {
+        padding: 0px 20px 10px;
+        background-color: #f1f1f1;
+        box-shadow: 0px 1px 5px #333;
+      }
+      footer .material-icons.team {
+        position: relative;
+        top: 7px;
+      }
+      .a {
+        cursor: pointer;
+      }
+      dialog {
+        width: 80% !important;
+      }
+      .mdl-dialog__subtitle{
+        padding: 5px 23px;f
+      }
+      .doc {
+        color: #3a97ff;
+      }
+      .api-method {
+        text-transform: uppercase;        
+      }
+      .api-method.head {
+        color: #61c1c1;
+      }
+      .api-method.get {
+        color: #c694ff;
+      }
+      .api-method.post {
+        color: #ff7272;
+      }
+      .api-method.put {
+        color: #ffac65;
+      }
+      .api-method.delete {
+        color: #636363;
+      }
+      .second {
+        color: #b9b9b9;
+      }
+      tbody.opened tr:hover{
+        background-color: #f3f3f3;
+      }
+      tbody.opened tr {
+        background-color: #f3f3f3;
+      }     
+      .mdl-card {
+        min-height: auto;
+      }
+      .mtable thead th {
+        color: #fff;
+        text-shadow: 0px 0px 1px #353535;
+      }
+      .mtable thead tr {
+        background: rgb(0,150,136);
+      }
+      .demo-card-wide {
+        
+      }
+      json-doc div {
+        overflow-x: auto;
+      }
+      json-doc ul {
+        padding: 0px 0px 0px 20px;
+        margin: 0px;
+      }
+      json-doc li {
+        padding: 0px;
+        margin: 0px;
+        line-height: 1.4em;
+        list-style: none;
+      }
+      json-doc b {
+        color: #009688;
+      }
+      json-doc i {
+        color: #ccc;
+      }
+      json-doc span {
+        color: rgb(160, 80, 31);
+      }
+      details[open] > summary{
+        font-weight: bold;
+      }
+      summary {
+        cursor: pointer;
+        outline: none;
+      }
+      pre {
+        margin: 0px;
+        overflow-x:auto;
+      }
+      ::-webkit-scrollbar-track
+      {
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+        border-radius: 10px;
+        background-color: #F5F5F5;
+      }
+
+      ::-webkit-scrollbar
+      {
+        width: 4px;
+        height: 6px;
+        background-color: #F5F5F5;
+      }
+
+      ::-webkit-scrollbar-thumb
+      {
+        border-radius: 10px;
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+        background-color: #D62929;
+      }
+      .cell-code {
+        border: dotted 2px #ccc;
+        background-color: white;
+        padding: 5px 8px;
+        border-radius: 8px;
+        color: #333;
+      }
+      .request summary {
+        color: rgb(255, 0, 196);
+      }
+      .request .header summary {
+        color: rgb(171, 8, 133);
+      }
+      .request .body summary {
+        color: rgb(111, 0, 86);
+      }
+      .response summary {
+        color: rgb(57, 189, 106);
+      }
+      .response .header summary {
+        color: rgb(7, 115, 47);
+      }
+      .response .body summary {
+        color: rgb(2, 72, 28);
+      }
+      .url {
+        padding: 3px 10px;
+        border: double;
+        border-radius: 5px;
+        background-color: #292929;
+        margin: 0px 0px 10px;
+        color: #dadada;
+        font-weight: bold;
+      }
+      .copy:hover {
+        color: #929292;
+      }
+      .copy i {
+        font-size: 15px;
+      }
+      .copy {
+        float: right;
+        margin-top: -6px;
+        margin-right: -10px;
+        color: #ccc;
+        font-size: 10px;
+      }
+      .mdl-grid.mdl-grid--no-padding{
+        padding: 0px;
+      }
+      .request .samp, .response .samp {
+        padding: 0px 16px;
+      }
+      .dialog-doc summary {
+        color: #3285e3;
+      }
+      .dialog-doc summary i {
+        color: #89bdf7;
+      }
+    </style>    
+  </head>
+
+  <body ng-controller="MainCtrl as ctrl" ng-show="ctrl.data">
+    <dialog class="mdl-dialog dialog-doc">
+      <div class="mdl-dialog__title mdl-color-text--primary">Change history</div>
+      <div class="mdl-dialog__subtitle second">Press ESC to close</div>
+      <hr/>
+      <div class="mdl-dialog__content">
+        <details ng-repeat="version in ctrl.data.version" ng-open="$index == 0">
+          <summary>{{version.code}} <i>({{version.date | date:'fullDate'}})</i></summary>
+          <div class="mdl-grid mdl-grid--no-padding">
+            <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-cell--stretch">
+              <div class="cell-code"><pre>{{version.content}}</pre></div>
+            </div>
+          </div>  
+        </details>
+      </div>
+    </dialog>
+    <div class="mdl-layout mdl-js-layout">
+      <main class="mdl-layout__content">
+        <div class="demo-card-wide mdl-card" style="width: 100%">
+          <div class="mdl-card__title">
+            <div>
+              <div class="mdl-card__title-text"><i class="material-icons">bubble_chart</i> {{ctrl.data.name}}</div>
+              <div class="mdl-card__subtitle-text"><strong class="doc">APIs Document</strong></div>
+              <div ng-if="ctrl.data.version && ctrl.data.version.length > 0">
+                <div class="mdl-card__subtitle-text"><span class="second">Version:</span> <i>{{ctrl.data.version[0].code}}</i></div>
+                <div class="mdl-card__subtitle-text"><span class="second">Created date:</span> <i>{{ctrl.data.version[0].date | date: 'fullDate'}}</i></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <br/><br/>
+        <div class="demo-card-wide mdl-card" ng-repeat="tc in ctrl.data.testcases" ng-init="tc.passed=0; tc.failed=0;" style="width: 100%;">
+          <table class="mdl-data-table mdl-js-data-table mtable" width="100%">
+            <thead>
+              <tr>
+                <th class="mdl-data-table__cell--non-numeric" colspan="3" title="{{tc.des}}">
+                  <i class="material-icons" style="position: relative; top: 7px">blur_on</i> {{tc.des}}
+                </th>
+              </tr>
+            </thead>
+            <tbody ng-repeat="api in tc.apis" ng-class="{'opened': api.isShowMore}">
+              <tr ng-click="api.isShowMore=!api.isShowMore;" ng-class="{'opened': api.isShowMore}" class="a">
+                <td class="mdl-data-table__cell--non-numeric" width="1">
+                  <i class="material-icons doc">grain</i>  
+                </td>
+                <td class="mdl-data-table__cell--non-numeric api-method" ng-class="api.method" width="90">
+                  <b>{{api.method}}</b>            
+                </td>
+                <td class="mdl-data-table__cell--non-numeric">
+                  <div style="text-transform: capitalize;">{{api.name}}</div>
+                </td>
+              </tr>
+              <tr ng-show="api.isShowMore">
+                <td colspan="6" class="mdl-data-table__cell--non-numeric">
+                  <div class="url">{{api.url}} 
+                    <button ng-if="ctrl.isSupportCopy" id="url-{{$parent.$index}}-{{$index}}" ng-click='ctrl.copy(api.url)' class="mdl-button mdl-js-button mdl-button--icon copy" ><i class="material-icons">content_copy</i></button>
+                    <div class="mdl-tooltip" for="url-{{$parent.$index}}-{{$index}}">{{ctrl.copyName}}</div>
+                  </div>
+                  <div class="mdl-grid mdl-grid--no-padding">
+                    <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-cell--stretch">
+                      <details class="request" open>
+                        <summary>Request</summary>
+                        <div class="samp">
+                          <details class="header" open>
+                            <summary>Header</summary>
+                            <div class="mdl-grid mdl-grid--no-padding" ng-if="api['header']">
+                              <div class="mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--4-col-phone mdl-cell--stretch cell-code">
+                                <button ng-if="ctrl.isSupportCopy" id="reqHeader-{{$parent.$index}}-{{$index}}" ng-click='ctrl.copy(api["header"].data)' class="mdl-button mdl-js-button mdl-button--icon copy" ><i class="material-icons">content_copy</i></button>
+                                <div class="mdl-tooltip" for="reqHeader-{{$parent.$index}}-{{$index}}">{{ctrl.copyName}}</div>
+                                <pre>{{api["header"].data | header}}</pre>                        
+                              </div>
+                              <div class="mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--4-col-phone mdl-cell--stretch cell-code">
+                                <json-doc doc="api['header'].doc"></json-doc>
+                              </div>
+                            </div>                            
+                          </details>
+                          <details class="body" open>
+                            <summary>Body</summary>
+                            <div class="mdl-grid mdl-grid--no-padding" ng-if="api['body']" ng-if="api['body']">
+                              <div class="mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--4-col-phone mdl-cell--stretch cell-code">
+                                <button ng-if="ctrl.isSupportCopy" id="reqBody-{{$parent.$index}}-{{$index}}" ng-click='ctrl.copy(api["body"].data)' class="mdl-button mdl-js-button mdl-button--icon copy" ><i class="material-icons">content_copy</i></button>
+                                <div class="mdl-tooltip" for="reqBody-{{$parent.$index}}-{{$index}}">{{ctrl.copyName}}</div>
+                                <pre>{{api["body"].data | json}}</pre>
+                              </div>
+                              <div class="mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--4-col-phone mdl-cell--stretch cell-code">
+                                <json-doc doc="api['body'].doc"></json-doc>
+                              </div>
+                            </div>
+                          </details> 
+                        </div>
+                      </details>
+                    </div>
+                    <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-cell--stretch">
+                      <details class="response" open>
+                        <summary>Response</summary>
+                        <div class="samp">
+                          <details class="header" open>
+                            <summary>Header</summary>
+                            <div class="mdl-grid mdl-grid--no-padding" ng-if="api['#header']">
+                              <div class="mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--4-col-phone mdl-cell--stretch cell-code">
+                                <button ng-if="ctrl.isSupportCopy" id="resHeader-{{$parent.$index}}-{{$index}}" ng-click='ctrl.copy(api["#header"].data)' class="mdl-button mdl-js-button mdl-button--icon copy" ><i class="material-icons">content_copy</i></button>
+                                <div class="mdl-tooltip" for="resHeader-{{$parent.$index}}-{{$index}}">{{ctrl.copyName}}</div>
+                                <pre>{{api["#header"].data | header}}</pre>
+                              </div>
+                              <div class="mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--4-col-phone mdl-cell--stretch cell-code">
+                                <json-doc doc="api['#header'].doc"></json-doc>
+                              </div>
+                            </div>
+                          </details>
+                          <details class="body" open>
+                            <summary>Body</summary>
+                            <div class="mdl-grid mdl-grid--no-padding" ng-if="api['#body']">
+                              <div class="mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--4-col-phone mdl-cell--stretch cell-code">
+                                <button ng-if="ctrl.isSupportCopy" id="resBody-{{$parent.$index}}-{{$index}}" ng-click='ctrl.copy(api["#body"].data)' class="mdl-button mdl-js-button mdl-button--icon copy" ><i class="material-icons">content_copy</i></button>
+                                <div class="mdl-tooltip" for="resBody-{{$parent.$index}}-{{$index}}">{{ctrl.copyName}}</div>
+                                <pre>{{api["#body"].data | json}}</pre>
+                              </div>
+                              <div class="mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--4-col-phone mdl-cell--stretch cell-code">
+                                <json-doc doc="api['#body'].doc"></json-doc>
+                              </div>
+                            </div>
+                          </details>   
+                        </div>
+                      </details>
+                    </div>               
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </main>
+      <footer>
+        <i class="material-icons team">developer_board</i> {{ctrl.data.team}}
+        <button id="viewChanges" style="position: absolute; right: 0px;" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored" ng-click="ctrl.showChanges()" ng-disabled="!ctrl.data.version || ctrl.data.version.length == 0" >
+          <i class="material-icons">change_history</i>
+        </button>
+        <div class="mdl-tooltip mdl-tooltip--top" data-mdl-for="viewChanges">
+          View changes (F1)
+        </div>
+      </footer>
+    </div>
+  </body>
+  <script defer src="https://code.getmdl.io/1.2.0/material.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
+  <script src="http://www.openjs.com/scripts/events/keyboard_shortcuts/shortcut.js"></script>
+  <script type="text/javascript">
+    var dialog = document.querySelector('dialog');
+    shortcut.add("F1", function() {
+      if(dialog.hasAttribute('open')) dialog.close();
+      else dialog.showModal(); 
+    });
+    angular.module('myApp', [])
+    .factory('clipboard', ['$document', '$window', function ($document, $window) {
+        function createNode(text, context) {
+            var node = $document[0].createElement('textarea');
+            node.style.position = 'absolute';
+            node.textContent = text;
+            node.style.left = '-10000px';
+            node.style.top = ($window.pageYOffset || $document[0].documentElement.scrollTop) + 'px';
+            return node;
+        }
+
+        function copyNode(node) {
+            try {
+                // Set inline style to override css styles
+                $document[0].body.style.webkitUserSelect = 'initial';
+
+                var selection = $document[0].getSelection();
+                selection.removeAllRanges();
+                node.select();
+
+                if(!$document[0].execCommand('copy')) {
+                    throw('failure copy');
+                }
+                selection.removeAllRanges();
+            } finally {
+                // Reset inline style
+                $document[0].body.style.webkitUserSelect = '';
+            }
+        }
+
+        function copyText(text, context) {
+            var node = createNode(text, context);
+            $document[0].body.appendChild(node);
+            copyNode(node);
+            $document[0].body.removeChild(node);
+        }
+
+        return {
+            copyText: copyText,
+            supported: 'queryCommandSupported' in $document[0] && $document[0].queryCommandSupported('copy')
+        };
+    }])
+    .filter('header', function() {
+      return function(input) {
+        var str = "";
+        for(var i in input){
+          str += '"' + i + '": "' + input[i] + '"\n';
+        }
+        return str;
+      };
+    })
+    .filter('jsonDoc', function() {
+      return function(input) {
+        return input.replace(/\[(\r|\n|\t|\s)*\{/, '[{').replace(/\}(\r|\n|\t|\s)*\]/, '}]');
+      };
+    })
+    .component('jsonDoc', {
+      template: `
+        <div ng-if="!$ctrl.isNext">
+          <span>{{$ctrl.doc.des || 'Undefined'}}</span> <i>({{$ctrl.doc.type}})</i>
+          <hr/>
+          <json-doc doc="$ctrl.doc.data" ng-if="$ctrl.doc.data" is-next="true"></json-doc>
+        </div>
+        <ul ng-if="$ctrl.isNext">
+          <li ng-repeat="(k, vl) in $ctrl.doc">
+            <b>{{k}}</b> <i>({{vl.type}})</i> <span>{{vl.des || 'Undefined'}}</span>
+            <json-doc doc="vl.data" ng-if="vl.data" is-next="true"></json-doc>
+          </li>
+        </ul>  
+      `,
+      bindings: {
+        doc: '<',
+        isNext: '<'
+      },
+      controller: [function() {
+        
+      }]
+    })
+    .controller('MainCtrl', ['$scope', 'clipboard', '$filter', function MainCtrl($scope, clipboard, $filter) {
+      this.isSupportCopy = clipboard.supported;
+      this.copyName = 'Copy';
+      var self = this;
+      this.showChanges = () => {
+        dialog.showModal();
+      };
+      this.copy = (vl) => {
+          clipboard.copyText(vl instanceof Object ? $filter('json')(vl) : vl);
+          self.copyName = 'Copied';          
+          setTimeout(()=>{
+            $scope.$apply(()=>{
+              self.copyName = 'Copy';
+            });            
+          }, 1000);
+      }
+      this.data = $data;
+  }]);
+  </script>
+
+  </html>

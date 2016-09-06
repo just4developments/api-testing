@@ -1,3 +1,6 @@
+var fs = require('fs');
+var path = require('path');
+
 exports = module.exports = {
   assign: (target, ...sources) => {
     var isObject = (item) => {

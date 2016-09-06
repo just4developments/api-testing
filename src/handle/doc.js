@@ -1,4 +1,7 @@
 var Utils = require('../helper/utils');
+var readline = require('readline')
+var path = require('path');
+var fs = require('fs');
 
 module.exports = class Doc {
   
@@ -28,17 +31,29 @@ module.exports = class Doc {
           if ((api['#body'] instanceof Array) && api['#body'].length > 1) {
             api['#body'] = [api['#body'][0]];
           }
-          if (api.doc.header && api.header) apiDoc.header = this.getDocFromObject(this.evalDoc(api.doc.header), api.header);
-          if (api.doc.body && api.body) apiDoc.body = this.getDocFromObject(this.evalDoc(api.doc.body), api.body);
-          if (api.doc["#header"] && api["#header"]) apiDoc["#header"] = this.getDocFromObject(this.evalDoc(api.doc["#header"]), api["#header"]);
-          if (api.doc["#body"] && api["#body"]) apiDoc["#body"] = this.getDocFromObject(this.evalDoc(api.doc["#body"]), api['#body']);
+          if (api.doc.header && api.header) apiDoc.header = {
+            doc: this.getDocFromObject(this.evalDoc(api.doc.header), api.header),
+            data: api.header
+          }
+          if (api.doc.body && api.body) apiDoc.body = {
+            doc: this.getDocFromObject(this.evalDoc(api.doc.body), api.body),
+            data: api.body
+          }
+          if (api.doc["#header"] && api["#header"]) apiDoc["#header"] = {
+            doc: this.getDocFromObject(this.evalDoc(api.doc["#header"]), api["#header"]),
+            data: api["#header"]
+          }
+          if (api.doc["#body"] && api["#body"]) apiDoc["#body"] = {
+            doc: this.getDocFromObject(this.evalDoc(api.doc["#body"]), api['#body']),
+            data: api["#body"]
+          }
           tmpDoc[api.doc.group].push(apiDoc);
         }
       }
     }
     var rs = [];
     for (var i in tmpDoc) {
-      var title;
+      var des;
       tmpDoc[i].sort((a, b) => {
         return a.order - b.order;
       });
@@ -48,19 +63,70 @@ module.exports = class Doc {
       if (tmpDoc[i].order < 0) {
         console.warn(`Not declare group "${i}" in _doc.js yet`);
         tmpDoc[i].order = 100;
-        title = "Not set group title yet";
+        des = "Not set group description yet";
       } else {
-        title = this.doc.groups[tmpDoc[i].order][i];
+        des = this.doc.groups[tmpDoc[i].order][i];
       }
       rs.push({
-        title: title,
+        des: des,
         apis: tmpDoc[i]
       });
     }
     rs.sort((a, b) => {
       return a.order - b.order;
     });
-    cb({version: this.config.version, testcases: rs});
+    this.getVersion((version) => {
+      cb({version: version, testcases: rs, path: this.config.path, name: this.config.name, browser: this.config.browser, team: this.config.team});
+    });
+  }
+
+  getVersion(fcDone){
+    try{
+      var rs = [];
+      var temp;
+      var pathVersion = path.join(__dirname, '..', this.config.path, '_version.http');
+      var rl = readline.createInterface({
+        input: fs.createReadStream(pathVersion)
+      });
+      rl.on('line', function(line) {
+        if((!temp || !temp.content) && line.trim().length === 0) return;
+        var m = line.match(/^#\s*version\s*:?\s*([^\n|\r]+)/i);
+        if(m) {
+          if(!temp) temp = {};
+          else if(temp.content){
+            temp.content = temp.content.join('\n');
+            rs.push(temp);
+            temp = {};
+          }
+          temp.code = m[1].trim();
+        }else{
+          m = line.match(/^#\s*date\s*:?\s*([^\n|\r]+)/i);
+          if(m) {
+            if(!temp) temp = {};
+            else if(temp.content){
+              temp.content = temp.content.join('\n');
+              rs.push(temp);
+              temp = {};
+            }
+            temp.date = new Date(m[1].trim());
+          }else{
+            if(temp){
+              if(!temp.content) temp.content = [];
+              temp.content.push(line);
+            }
+          }
+        }
+      }).on('close', function() {
+        if(temp && temp.content){
+          temp.content = temp.content.join('\n');
+          rs.push(temp);
+          temp = {};
+        }
+        fcDone(rs);
+      });
+    }catch(e){ throw `Could not find ${pathVersion}`; }    
+    
+    return rs;
   }
 
   getDocFromObject(doc, item) {
@@ -120,18 +186,23 @@ module.exports = class Doc {
   }  
 
   getType(doc, value) {
-    var regexCuzDefine = /<<([^>]+)>>/;
-    if(doc){
-      var m = doc.match(regexCuzDefine );
-      if(m && m.length > 1) {
-        return m;
-      }
-    }
     if(value instanceof Array) return 'array';
     if(value instanceof Object) return 'object';
     if (typeof value === 'number') {
       if (value % 1 === 0) return 'integer';
       return 'float';
+    }else if(typeof value === 'string') {
+      if(doc){
+        var regexCuzDefine = /<<([^>]+)>>/;
+        try{
+          var m = doc.match(regexCuzDefine);
+          if(m && m.length > 1) {
+            return m;
+          }
+        }catch(e){
+          return 'Error';
+        }
+      }
     }
     return typeof value;
   }

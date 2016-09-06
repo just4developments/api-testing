@@ -1,7 +1,7 @@
 exports = module.exports = {
   groups: [
-    {'cuisine': 'Document for cuisine APIs'}
-  ],
+    {'place': 'Document for place', 'group 1': 'Group 1'}
+  ],  
   describe: {
     address: {
       "#": "Thong tin duong pho",

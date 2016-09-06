@@ -127,7 +127,6 @@ module.exports = {
     name: "test delete",
     des: "test",
     url: "DELETE ${host}/user/thanh",
-    body: "${userList[0]}",
     //var: "",
     doc: {
       body: "user",
