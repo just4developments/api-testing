@@ -15,6 +15,10 @@ if(!projectname) throw '# Not found project to run testcase';
 
 console.info(`############### PROJECT: ${projectname} ###############`);
 console.info('');
+var openWhenFinish = (fileOut, browser) => {
+  var open = require("open");
+  open(fileOut, browser);
+};
 var main = new Main(`../projects/${projectname}`);
 var startTime = new Date().getTime();
 main.exec(mainConfig => {
@@ -23,19 +27,23 @@ main.exec(mainConfig => {
     main.getDoc(doc => {
       exporter.toDocHtml(doc, (config, fileOut) => {
         console.info(`\n\n***** Please see doc file in "${fileOut}"`);
-        var open = require("open");
-        open(fileOut, mainConfig.browser);
+        openWhenFinish(fileOut, mainConfig.browser);
       });
     });
   }else {
-    mainConfig.duration = new Date().getTime() - startTime;    
-    exporter.toTestHtml(mainConfig, (config, fileOut) => {
-      console.info(`\n\n***** Please see test result file in "${fileOut}"`);
-      var emitter = require('./helper/emitter');
-      emitter(main, () => {
-        var open = require("open");
-        open(fileOut, mainConfig.browser);
+    main.getTest(result => {
+      result.duration = new Date().getTime() - startTime;
+      exporter.toTestHtml(result, (config, fileOut) => {
+        console.info(`\n\n***** Please see test result file in "${fileOut}"`);
+        if('debug' === global.action){
+          var emitter = require('./helper/emitter');
+          emitter(main, () => {
+            openWhenFinish(fileOut, mainConfig.browser);
+          });
+        }else{
+          openWhenFinish(fileOut, mainConfig.browser);
+        }
       });
-    });
+    });    
   }
 });

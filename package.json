@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "node ./projects/demo/server/server.js",
     "test": "node ./src/index.js test",
+    "debug": "node ./src/index.js debug",
     "doc": "node ./src/index.js doc"
   },
   "author": "",

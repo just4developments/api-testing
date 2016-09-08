@@ -7,9 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://code.getmdl.io/1.2.0/material.teal-red.min.css" />
-    <script defer src="https://code.getmdl.io/1.2.0/material.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
-    <script src="http://www.openjs.com/scripts/events/keyboard_shortcuts/shortcut.js"></script>
     <style>
       body * {
         font-family: monospace,"sans-serif";
@@ -135,6 +132,10 @@
         animation-iteration-count: infinite;
         animation-timing-function: linear;
       }
+      details .disabled > summary {
+        opacity:0.3;
+        filter:alpha(opacity=30);
+      }
       details[open] > summary{
         font-weight: bold;
       }
@@ -145,6 +146,8 @@
       pre {
         margin: 0px;
         overflow-x:auto;
+        white-space: pre-wrap;
+        word-break: break-all;
       }
       ::-webkit-scrollbar-track
       {
@@ -173,6 +176,11 @@
         border-radius: 8px;
         color: #333;
       }
+      .cell-code pre .string { color: #6e549d; }        
+      .cell-code pre .number { color: #499996; }
+      .cell-code pre .boolean { color: #8c4e84; }
+      .cell-code pre .null { color: #979797; }
+      .cell-code pre .key { color: #8c6363; }
       .request summary {
         color: rgb(255, 0, 196);
       }
@@ -248,7 +256,7 @@
         <div class="demo-card-wide mdl-card mdl-shadow--0dp" style="width: 100%">
           <div class="mdl-card__title">
             <div>
-              <div class="mdl-card__title-text" style="text-transform: capitalize;"><i class="material-icons">bubble_chart</i> {{ctrl.data.name}}</div>
+              <div class="mdl-card__title-text" style="text-transform: capitalize;"><i class="material-icons">bubble_chart</i> {{ctrl.data.projectName}}</div>
               <div class="mdl-card__subtitle-text"><strong class="doc">APIs Testing Result</strong></div>
               <div class="mdl-card__subtitle-text">Time execution: {{ctrl.data.duration | number}} ms</div>
             </div>
@@ -305,17 +313,18 @@
                     <i class="material-icons">replay</i>
                   </button>
                   <div ng-if="ctrl.filter != 2" style="text-transform: capitalize;">{{api.des}}</div>
-                  <div ng-if="ctrl.filter == 2" style="text-transform: capitalize;">{{api.name}}</div>
+                  <div ng-if="ctrl.filter == 2" style="text-transform: capitalize;">{{api.title}}</div>
                   <div><small class="second">{{api.url}}</small></div>
                 </td>
                 <td ng-class="{'passed': !api.error, 'failed': api.error}">
-                  {{api["#status"]}}
+                  {{api.responseStatus}}
                   <div><small class="second">{{api.duration | number}} ms</small></div>
                 </td>
-                <td class="mdl-data-table__cell--non-numeric"><b class="variable">{{api.var}}</b></td>
+                <td class="mdl-data-table__cell--non-numeric"><var class="variable" ng-if="api.var"><em>{{api.var}}</em></var></td>
                 <td class="mdl-data-table__cell--non-numeric">
                   <div class="error" style="word-break: break-all; white-space: initial;">
-                    {{api.error.mes}}
+                    <div>{{api.error.mes}}</div>
+                    <div ng-if="api.error.details">{{api.error.details | jsoner}}</div>
                   </div>
                 </td>
               </tr>
@@ -323,60 +332,60 @@
                 <td colspan="6" class="mdl-data-table__cell--non-numeric">
                   <div class="mdl-grid mdl-grid--no-padding">
                     <div class="mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--4-col-phone mdl-cell--stretch">
-                      <details class="request" open>
+                      <details class="request" open ng-class="{'disabled': !api.requestHeader && !api.requestBody}">
                         <summary>Request</summary>
                         <div class="samp">
-                          <details class="header" open>
+                          <details class="header" open ng-class="{'disabled': !api.requestHeader}">
                             <summary>Header</summary>
-                            <div class="cell-code" ng-if='api["header"]'>
-                              <button ng-if="ctrl.isSupportCopy" id="request-header-{{$parent.$index}}-{{$index}}" ng-click='ctrl.copy(api["header"])' class="mdl-button mdl-js-button mdl-button--icon copy" ><i class="material-icons">content_copy</i></button>
+                            <div class="cell-code" ng-if='api.requestHeader'>
+                              <button ng-if="ctrl.isSupportCopy" id="request-header-{{$parent.$index}}-{{$index}}" ng-click='ctrl.copy(api.responseHeader)' class="mdl-button mdl-js-button mdl-button--icon copy" ><i class="material-icons">content_copy</i></button>
                               <div class="mdl-tooltip" for="request-header-{{$parent.$index}}-{{$index}}">{{ctrl.copyName}}</div>
-                              <pre>{{api.header | header}}</pre>
+                              <pre ng-bind-html="api.requestHeader | header"></pre>
                             </div>
                           </details>
-                          <details class="body" open>
+                          <details class="body" open ng-class="{'disabled': !api.requestBody}">
                             <summary>Body</summary>
-                            <div class="cell-code" ng-if='api["body"]'>
-                              <button ng-if="ctrl.isSupportCopy" id="request-body-{{$parent.$index}}-{{$index}}" ng-click='ctrl.copy(api["body"])' class="mdl-button mdl-js-button mdl-button--icon copy" ><i class="material-icons">content_copy</i></button>
+                            <div class="cell-code" ng-if='api.requestBody'>
+                              <button ng-if="ctrl.isSupportCopy" id="request-body-{{$parent.$index}}-{{$index}}" ng-click='ctrl.copy(api.responseBody)' class="mdl-button mdl-js-button mdl-button--icon copy" ><i class="material-icons">content_copy</i></button>
                               <div class="mdl-tooltip" for="request-body-{{$parent.$index}}-{{$index}}">{{ctrl.copyName}}</div>
-                              <pre>{{api.body | json}}</pre>
+                              <pre ng-bind-html="api.requestBody | jsoner"></pre>
                             </div>
                           </details>
                         </div>
                       </details>
-                      <details class="response" open>
-                        <summary>Response ({{api["#status"]}})</summary>
+                      <details class="response" open ng-class="{'disabled': !api.responseHeader && !api.responseBody}">
+                        <summary>Response ({{api.responseStatus}})</summary>
                         <div class="samp">
-                          <details class="header" open>
+                          <details class="header" open ng-class="{'disabled': !api.responseHeader}">
                             <summary>Header</summary>
-                            <div class="cell-code" ng-if='api["#header"]'>
-                              <button ng-if="ctrl.isSupportCopy" id="response-header-{{$parent.$index}}-{{$index}}" ng-click='ctrl.copy(api["#header"])' class="mdl-button mdl-js-button mdl-button--icon copy" ><i class="material-icons">content_copy</i></button>
+                            <div class="cell-code" ng-if='api.responseHeader'>
+                              <button ng-if="ctrl.isSupportCopy" id="response-header-{{$parent.$index}}-{{$index}}" ng-click='ctrl.copy(api.responseHeader)' class="mdl-button mdl-js-button mdl-button--icon copy" ><i class="material-icons">content_copy</i></button>
                               <div class="mdl-tooltip" for="response-header-{{$parent.$index}}-{{$index}}">{{ctrl.copyName}}</div>
-                              <pre>{{api["#header"] | header}}</pre>
+                              <pre ng-bind-html="api.responseHeader | header"></pre>
                             </div>
                           </details>
-                          <details class="body" open>
+                          <details class="body" open ng-class="{'disabled': !api.responseBody}">
                             <summary>Body</summary>
-                            <div class="cell-code" ng-if='api["#body"]'>
-                              <button ng-if="ctrl.isSupportCopy" id="response-body-{{$parent.$index}}-{{$index}}" ng-click='ctrl.copy(api["#body"])' class="mdl-button mdl-js-button mdl-button--icon copy" ><i class="material-icons">content_copy</i></button>
+                            <div class="cell-code" ng-if='api.responseBody'>
+                              <button ng-if="ctrl.isSupportCopy" id="response-body-{{$parent.$index}}-{{$index}}" ng-click='ctrl.copy(api.responseBody)' class="mdl-button mdl-js-button mdl-button--icon copy" ><i class="material-icons">content_copy</i></button>
                               <div class="mdl-tooltip" for="response-body-{{$parent.$index}}-{{$index}}">{{ctrl.copyName}}</div>
-                              <pre>{{api["#body"] | json}}</pre>
+                              <pre ng-bind-html="api.responseBody | jsoner"></pre>
                             </div>
                           </details>
                         </div>
                       </details>
                     </div>
                     <div class="mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--4-col-phone mdl-cell--stretch">
-                      <details class="variable">
-                        <summary>Variable</summary>
-                        <div class="cell-code" ng-if="api.var">
-                          <pre><b>var <var>{{api.var}}</var> =</b> {{api["#var"] | json}}</pre>
+                      <details class="variable" ng-if="api.var">
+                        <summary><var>{{api.var}}</var><small> &lt;&lt;variable&gt&gt</small></summary>
+                        <div class="cell-code">
+                          <pre ng-bind-html='api["#var"] | jsoner'></pre>
                         </div>
                       </details> 
                       <details class="checker" open>
                         <summary>Checker</summary>
                         <div class="cell-code" ng-if="api.checker">
-                          <pre>{{api.checker | json}}</pre>
+                          <pre ng-bind-html="api.checker | jsoner"></pre>
                         </div>
                       </details>                              
                     </div>
@@ -408,13 +417,17 @@
       </footer>
     </div>
   </body>
+  <script defer src="https://code.getmdl.io/1.2.0/material.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
+  <script src="https://code.angularjs.org/1.5.8/angular-sanitize.min.js"></script>
+  <script src="http://www.openjs.com/scripts/events/keyboard_shortcuts/shortcut.js"></script>
   <script type="text/javascript">
     var dialog = document.querySelector('dialog');
     shortcut.add("F1", function() {
       if(dialog.hasAttribute('open')) dialog.close();
       else dialog.showModal(); 
     });
-    angular.module('myApp', [])
+    angular.module('myApp', ['ngSanitize'])
     .factory('clipboard', ['$document', '$window', function ($document, $window) {
         function createNode(text, context) {
             var node = $document[0].createElement('textarea');
@@ -456,15 +469,39 @@
             supported: 'queryCommandSupported' in $document[0] && $document[0].queryCommandSupported('copy')
         };
     }])
-    .filter('header', function() {
-      return function(input) {
-        var str = "";
-        for(var i in input){
-          str += '"' + i + '": "' + input[i] + '"\n';
-        }
-        return str;
+    .filter('jsoner', ['$sce', function($sce) {
+      var syntaxHighlight = (json) => {
+        json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+          var cls = 'number';
+          if (/^"/.test(match)) {
+            if (/:$/.test(match)) {
+              cls = 'key';
+            } else {
+              cls = 'string';
+            }
+          } else if (/true|false/.test(match)) {
+            cls = 'boolean';
+          } else if (/null/.test(match)) {
+            cls = 'null';
+          }
+          return '<span class="' + cls + '">' + match + '</span>';
+        });
+      }
+      return (input) => {
+        return $sce.trustAsHtml(syntaxHighlight(JSON.stringify(input, undefined, 2)));
       };
-    })
+    }])
+    .filter('header', ['$sce', function($sce) {
+      return function(input) {
+        var str = [];
+        for(var i in input){
+          if(str.length > 0) str.push("\n");
+          str.push(`<span class="key">"${i}"</span>: <span class="${typeof input[i]}">"${input[i]}"</span>`);
+        }
+        return $sce.trustAsHtml(str.join(''));
+      };
+    }])
     .controller('MainCtrl', ['$scope', 'clipboard', '$filter', '$http', function MainCtrl($scope, clipboard, $filter, $http) {
       this.isSupportCopy = clipboard.supported;
       this.copyName = 'Copy';

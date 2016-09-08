@@ -1,159 +1,88 @@
 module.exports = {
   des: "All api for cuisine",
-  var: {
+  declareVar: {
     // host: 'abc.com' //overide var in main
   },
-  default: {
+  defaultInit: {
     checker: {
       status: 200
     }
   },
   apis: [{
-    name: "Upload file",
-    des: "Test upload file",
-    url: "POST http://173.164.244.85:4000/whatseat/account/upload",
-    transform: "form", // form || json
-    header: {
-      "content-type": "multipart/form-data"
-    },
-    body: {
-      name: 'file test',
-      "file:avatar": 'C:\\Users\\thanh_xps13\\Desktop\\vephat.jpg'
-    },
-    //var: "",
-    // doc: {"#body": "users", header: "req.header", "#header": "res.header", group: "place", "order": 2},
-    // checker: {
-    status: [200]
-      //size: 20,
-      //contains: undefined,
-      // equals: {
-      //   name: "nana",
-      //   age: 1
-      // }
-      //in: undefined,
-      //"!in": undefined,
-      //"!equals": undefined,
-      //"!contains": []
-      // }
-      //sleep: 0
-      // disabled: true
+    extends: "user-get",
+    checker: [{
+      size: 2
+    }, {
+      equals: [{
+        "name": "Bristan",
+        "age": 28,
+        "address": {
+          "street": "LA, US"
+        }
+      }, {
+        "name": "Thanh",
+        "age": 21,
+        "address": {
+          "street": "LY, HN"
+        }
+      }]
+    }]
   }, {
-    name: "get test",
-    des: "get test des",
-    url: "GET ${host}/user",
-    var: "userList",
-    doc: {
-      "#body": "users",
-      header: "req.header",
-      "#header": "res.header",
-      group: "place",
-      "order": 2
-    },
-    // checker: {
-    //status: [200],
-    //size: 20,
-    //contains: undefined,
-    // equals: {
-    //   name: "nana",
-    //   age: 1
-    // }
-    //in: undefined,
-    //"!in": undefined,
-    //"!equals": undefined,
-    //"!contains": []
-    // }
-    //sleep: 0
-    // disabled: true
-  }, {
-    name: "test",
-    des: "test",
-    url: "PUT ${host}/user/thanh",
-    body: "${userList.body[0]}",
-    //var: "",
-    doc: {
-      body: "user",
-      "#body": "user",
-      header: "req.header",
-      "#header": "res.header",
-      group: "place",
-      "order": 2
-    },
-    checker: {
-      status: 404,
-      //size: 20,
-      //contains: undefined,
-      // equals: {
-      //   name: "nana",
-      //   age: 1
-      // }
-      //in: undefined,
-      //"!in": undefined,
-      //"!equals": undefined,
-      //"!contains": []
-    },
-    //sleep: 0
-    // disabled: true
-  }, {
-    name: "test head",
-    des: "test",
-    url: "HEAD ${host}/user/thanh",
-    body: "${userList.body[0]}",
-    //var: "",
-    doc: {
-      body: "user",
-      "#body": "user",
-      header: "req.header",
-      "#header": "res.header",
-      group: "group 1",
-      "order": 2
-    },
-    checker: {
-      status: [200, 404],
-      //size: 20,
-      //contains: undefined,
-      // equals: {
-      //   name: "nana",
-      //   age: 1
-      // }
-      //in: undefined,
-      //"!in": undefined,
-      //"!equals": undefined,
-      //"!contains": []
-    },
-    //sleep: 0
-    // disabled: true
-  }, 
-  {
-    declare: "user-delete",
-    name: "test delete",
-    des: "test",
-    url: "DELETE ${host}/user/${userList.body[0].name}",
-    //var: "",
-    doc: {
-      body: "user",
-      "#body": "user",
-      header: "req.header",
-      "#header": "res.header",
-      group: "group 1",
-      "order": 2
-    },
-    checker: {
-      //status: [200],
-      //size: 20,
-      //contains: undefined,
-      equals: {
-        name: "nana",
-        age: 1
+    extends: "user-add",
+    requestBody: {
+      "name": "Nana",
+      "age": 5,
+      "address": {
+        "street": "HBT, HN"
       }
-      //in: undefined,
-      //"!in": undefined,
-      //"!equals": undefined,
-      //"!contains": []
     },
-    //sleep: 0
-    disabled: true
+    var: "newUser",
+    checker: [{
+      equals: {
+        "name": "Nana",
+        "age": 5,
+        "address": {
+          "street": "HBT, HN"
+        }
+      }
+    }]
+  }, {
+    extends: "user-update",
+    url: "${host}/user/${newUser.body.name}",
+    requestBody: {
+      "age": 10,
+      "address": {
+        "street": "HCM"
+      }
+    },
+    checker: [{
+      equals: {
+        "age": 10,
+        "address": {
+          "street": "HCM"
+        }
+      }
+    }]
+  }, {
+    extends: "user-details",
+    url: "${host}/user/${newUser.body.name}",
+    checker: [{
+      equals: {
+        "name": "Nana",
+        "age": 10,
+        "address": {
+          "street": "HCM"
+        }
+      }
+    }]
   }, {
     extends: "user-delete",
-    name: "test delete extendsion"
+    url: "${host}/user/${newUser.body.name}"
+  }, {
+    extends: "user-details",
+    url: "${host}/user/${newUser.body.name}"
+  }, {
+    extends: "user-ping",
+    des: "clear and reinit data"
   }]
 }

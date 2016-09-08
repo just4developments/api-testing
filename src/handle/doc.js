@@ -20,7 +20,7 @@ module.exports = class Doc {
       for (var api of ts.apis) {
         if (api.doc) {
           var apiDoc = {
-            name: api.name,
+            title: api.doc.title,
             des: api.des,
             url: api.url,
             method: api.method,
@@ -28,24 +28,24 @@ module.exports = class Doc {
           };
           api.doc = Utils.assign(defaultDoc, api.doc);
           if (!tmpDoc[api.doc.group]) tmpDoc[api.doc.group] = [];
-          if ((api['#body'] instanceof Array) && api['#body'].length > 1) {
-            api['#body'] = [api['#body'][0]];
+          if ((api.responseBody instanceof Array) && api.responseBody.length > 1) {
+            api.responseBody = [api.responseBody[0]];
           }
-          if (api.doc.header && api.header) apiDoc.header = {
-            doc: this.getDocFromObject(this.evalDoc(api.doc.header), api.header),
-            data: api.header
+          if (api.requestHeader) apiDoc.requestHeader = {
+            doc: !api.doc.requestHeader ? undefined : this.getDocFromObject(this.evalDoc(api.doc.requestHeader), api.requestHeader),
+            data: api.requestHeader
           }
-          if (api.doc.body && api.body) apiDoc.body = {
-            doc: this.getDocFromObject(this.evalDoc(api.doc.body), api.body),
-            data: api.body
+          if (api.requestBody) apiDoc.requestBody = {
+            doc: !api.doc.requestBody ? undefined : this.getDocFromObject(this.evalDoc(api.doc.requestBody), api.requestBody),
+            data: api.requestBody
           }
-          if (api.doc["#header"] && api["#header"]) apiDoc["#header"] = {
-            doc: this.getDocFromObject(this.evalDoc(api.doc["#header"]), api["#header"]),
-            data: api["#header"]
+          if (api.responseHeader) apiDoc.responseHeader = {
+            doc: !api.doc.responseHeader ? undefined : this.getDocFromObject(this.evalDoc(api.doc.responseHeader), api.responseHeader),
+            data: api.responseHeader
           }
-          if (api.doc["#body"] && api["#body"]) apiDoc["#body"] = {
-            doc: this.getDocFromObject(this.evalDoc(api.doc["#body"]), api['#body']),
-            data: api["#body"]
+          if (api.responseBody) apiDoc.responseBody = {
+            doc: !api.doc.responseBody ? undefined : this.getDocFromObject(this.evalDoc(api.doc.responseBody), api.responseBody),
+            data: api.responseBody
           }
           tmpDoc[api.doc.group].push(apiDoc);
         }
@@ -76,7 +76,7 @@ module.exports = class Doc {
       return a.order - b.order;
     });
     this.getVersion((version) => {
-      cb({version: version, testcases: rs, path: this.config.path, name: this.config.name, browser: this.config.browser, team: this.config.team});
+      cb({version: version, testcases: rs, path: this.config.path, projectName: this.config.projectName, team: this.config.team});
     });
   }
 
@@ -169,7 +169,7 @@ module.exports = class Doc {
   evalDoc(doc) {
     var docDeclare = {};
     for (var docname of doc.split('|')) {
-      docDeclare = Utils.assign(docDeclare, eval(`this.doc.describe["${docname}"]`));
+      docDeclare = Utils.assign(docDeclare, eval(`this.doc.declare["${docname}"]`));
       for(var k in docDeclare){
         var m = k.match(/^\$\{([^}]+)\}$/);
         if(m){

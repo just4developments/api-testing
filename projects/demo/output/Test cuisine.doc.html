@@ -208,10 +208,10 @@
         <div class="demo-card-wide mdl-card" style="width: 100%">
           <div class="mdl-card__title">
             <div>
-              <div class="mdl-card__title-text"><i class="material-icons">bubble_chart</i> {{ctrl.data.name}}</div>
+              <div class="mdl-card__title-text"><i class="material-icons">bubble_chart</i> {{ctrl.data.projectName}}</div>
               <div class="mdl-card__subtitle-text"><strong class="doc">APIs Document</strong></div>
               <div ng-if="ctrl.data.version && ctrl.data.version.length > 0">
-                <div class="mdl-card__subtitle-text"><span class="second">Version:</span> <i>{{ctrl.data.version[0].code}}</i></div>
+                <div class="mdl-card__subtitle-text"><span class="second">Version:</span> <a href="javascript:void(0)" ng-click="ctrl.showChanges()">{{ctrl.data.version[0].code}}</a></div>
                 <div class="mdl-card__subtitle-text"><span class="second">Created date:</span> <i>{{ctrl.data.version[0].date | date: 'fullDate'}}</i></div>
               </div>
             </div>
@@ -285,27 +285,27 @@
                         <div class="samp">
                           <details class="header" open>
                             <summary>Header</summary>
-                            <div class="mdl-grid mdl-grid--no-padding" ng-if="api['#header']">
+                            <div class="mdl-grid mdl-grid--no-padding" ng-if="api.responseHeader">
                               <div class="mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--4-col-phone mdl-cell--stretch cell-code">
-                                <button ng-if="ctrl.isSupportCopy" id="resHeader-{{$parent.$index}}-{{$index}}" ng-click='ctrl.copy(api["#header"].data)' class="mdl-button mdl-js-button mdl-button--icon copy" ><i class="material-icons">content_copy</i></button>
+                                <button ng-if="ctrl.isSupportCopy" id="resHeader-{{$parent.$index}}-{{$index}}" ng-click='ctrl.copy(api.responseHeader.data)' class="mdl-button mdl-js-button mdl-button--icon copy" ><i class="material-icons">content_copy</i></button>
                                 <div class="mdl-tooltip" for="resHeader-{{$parent.$index}}-{{$index}}">{{ctrl.copyName}}</div>
-                                <pre>{{api["#header"].data | header}}</pre>
+                                <pre>{{api.responseHeader.data | header}}</pre>
                               </div>
                               <div class="mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--4-col-phone mdl-cell--stretch cell-code">
-                                <json-doc doc="api['#header'].doc"></json-doc>
+                                <json-doc doc="api.responseHeader.doc"></json-doc>
                               </div>
                             </div>
                           </details>
                           <details class="body" open>
                             <summary>Body</summary>
-                            <div class="mdl-grid mdl-grid--no-padding" ng-if="api['#body']">
+                            <div class="mdl-grid mdl-grid--no-padding" ng-if="api.responseBody">
                               <div class="mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--4-col-phone mdl-cell--stretch cell-code">
-                                <button ng-if="ctrl.isSupportCopy" id="resBody-{{$parent.$index}}-{{$index}}" ng-click='ctrl.copy(api["#body"].data)' class="mdl-button mdl-js-button mdl-button--icon copy" ><i class="material-icons">content_copy</i></button>
+                                <button ng-if="ctrl.isSupportCopy" id="resBody-{{$parent.$index}}-{{$index}}" ng-click='ctrl.copy(api.responseBody.data)' class="mdl-button mdl-js-button mdl-button--icon copy" ><i class="material-icons">content_copy</i></button>
                                 <div class="mdl-tooltip" for="resBody-{{$parent.$index}}-{{$index}}">{{ctrl.copyName}}</div>
-                                <pre>{{api["#body"].data | json}}</pre>
+                                <pre>{{api.responseBody.data | json}}</pre>
                               </div>
                               <div class="mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--4-col-phone mdl-cell--stretch cell-code">
-                                <json-doc doc="api['#body'].doc"></json-doc>
+                                <json-doc doc="api.responseBody.doc"></json-doc>
                               </div>
                             </div>
                           </details>   
@@ -432,7 +432,7 @@
             });            
           }, 1000);
       }
-      this.data = {"version":[{"code":"version v3.0","date":"2015-06-07T00:00:00.000Z","content":"1. Sua lai 1 so sham\n2. Update status\n3. Change 1 so thu\n{\n  a: 10, \n  b: 11,\n  c: 12\n}\n4. Rename object\n    {\n      a: 10,\n      c: {\n        d: 12\n      }\n    }\n"},{"code":"v2.0","date":"2015-06-06T00:00:00.000Z","content":"3. Update new feature\n"},{"code":"v1.0","date":"2015-01-01T00:00:00.000Z","content":"1. Change something\n2. Update something"}],"testcases":[{"des":"Document for place","apis":[{"name":"get test","des":"get test des","url":"http://localhost:61189/user","method":"get","order":2,"header":{"doc":{"type":"object","data":{"content-type":{"type":"string","des":"Loai header"}}},"data":{"content-type":"application/json"}},"#body":{"doc":{"type":"array","des":"List user","data":{"name":{"type":"float","des":"Ten user"},"age":{"type":"integer","des":"Tuoi user"},"address":{"type":"object","des":"Thong tin duong pho","data":{"street":{"type":"string","des":"Duong pho"}}}}},"data":[{"name":"thanh","age":28,"address":{"street":"Luong yen"}}]}},{"name":"test","des":"test","url":"http://localhost:61189/user/thanh","method":"put","order":2,"header":{"doc":{"type":"object","data":{"content-type":{"type":"string","des":"Loai header"}}},"data":{"content-type":"application/json"}},"body":{"doc":{"type":"Error","des":{"#":"Thong tin user","name":"<<float>>Ten user","age":"Tuoi user","address":{"#":"Thong tin duong pho","street":"Duong pho"}}},"data":"${userList.body[0]}"}}]},{"des":"Group 1","apis":[{"name":"test head","des":"test","url":"http://localhost:61189/user/thanh","method":"head","order":2,"header":{"doc":{"type":"object","data":{"content-type":{"type":"string","des":"Loai header"}}},"data":{"content-type":"application/json"}},"body":{"doc":{"type":"Error","des":{"#":"Thong tin user","name":"<<float>>Ten user","age":"Tuoi user","address":{"#":"Thong tin duong pho","street":"Duong pho"}}},"data":"${userList.body[0]}"}},{"name":"test delete extendsion","des":"test","url":"http://localhost:61189/user/${userList.body[0].name}","method":"delete","order":2,"header":{"doc":{"type":"object","data":{"content-type":{"type":"string","des":"Loai header"}}},"data":{"content-type":"application/json"}}}]}],"path":"../projects/demo","name":"Test cuisine","browser":"chrome","team":"VN Team"};
+      this.data = {"version":[{"code":"version v3.0","date":"2015-06-07T00:00:00.000Z","content":"1. Sua lai 1 so sham\n2. Update status\n3. Change 1 so thu\n{\n  a: 10, \n  b: 11,\n  c: 12\n}\n4. Rename object\n    {\n      a: 10,\n      c: {\n        d: 12\n      }\n    }\n"},{"code":"v2.0","date":"2015-06-06T00:00:00.000Z","content":"3. Update new feature\n"},{"code":"v1.0","date":"2015-01-01T00:00:00.000Z","content":"1. Change something\n2. Update something"}],"testcases":[{"des":"Not set group description yet","apis":[{"name":"get test","des":"get test des","url":"http://localhost:61189/user","method":"get","order":2,"responseHeader":{"doc":{"type":"object","data":{"content-type":{"type":"string"}}},"data":{"content-type":"application/json; charset=utf-8"}},"responseBody":{"doc":{"type":"array","des":"List user","data":{"name":{"type":"float","des":"Ten user"},"age":{"type":"integer","des":"Tuoi user"},"address":{"type":"object","des":"Thong tin duong pho","data":{"street":{"type":"string","des":"Duong pho"}}}}},"data":[{"name":"thanh","age":28,"address":{"street":"Luong yen"}}]}},{"name":"test","des":"test","url":"http://localhost:61189/user/thanh","method":"put","order":2,"requestBody":{"doc":{"type":"Error","des":{"#":"Thong tin user","name":"<<float>>Ten user","age":"Tuoi user","address":{"#":"Thong tin duong pho","street":"Duong pho"}}},"data":"${userList.body[0]}"}},{"name":"test head","des":"test","url":"http://localhost:61189/user/thanh","method":"head","order":2,"requestBody":{"doc":{"type":"Error","des":{"#":"Thong tin user","name":"<<float>>Ten user","age":"Tuoi user","address":{"#":"Thong tin duong pho","street":"Duong pho"}}},"data":"${userList.body[0]}"}},{"name":"test delete extendsion","des":"test","url":"http://localhost:61189/user/${userList.body[0].name}","method":"delete","order":2}]}],"path":"../projects/demo","projectName":"Test cuisine","browser":"chrome","team":"VN Team"};
   }]);
   </script>
 

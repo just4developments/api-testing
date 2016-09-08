@@ -1,25 +1,25 @@
 module.exports = {
-  name: "Test cuisine",
+  projectName: "Test cuisine",
   team: "VN Team",
   browser: "chrome", // chrome, firefox, undefined is default browser
-  var: {
+  declareVar: {
     host: 'http://localhost:61189'
   },
-  default: {
+  defaultInit: {
     api: {
-      nostop:  true,
-      "cuz#header": [],
-      header: {
+      skipError:  true,
+      allowResponseHeader: ['content-type'],
+      requestHeader: {
         "content-type": "application/json"
       },
-      transform: "json",
-      checker: {
-        status: 100
-      }
+      transformRequest: "json", // form or json
+      checker: [
+        {status: [200]}
+      ]
     },
     testcase: {
       
     }
   },
-  testcases: ['user']
+  testcases: ['declare/user','user']
 }

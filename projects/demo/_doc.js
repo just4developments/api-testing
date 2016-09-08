@@ -2,7 +2,7 @@ exports = module.exports = {
   groups: [
     {'place': 'Document for place', 'group 1': 'Group 1'}
   ],  
-  describe: {
+  declare: {
     address: {
       "#": "Thong tin duong pho",
       street: "Duong pho"  
