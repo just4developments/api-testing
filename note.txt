@@ -1,5 +1,0 @@
-1. Update them customize type cua doc. Them <<float>>
-2. Update history changes version
-3. Upload file OK
-4. Variable tren header OK
-5. Gan bien vao khai bao doc OK

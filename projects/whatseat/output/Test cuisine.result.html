@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+  <html lang="en" ng-app="myApp">
+
+  <head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.2.0/material.teal-red.min.css" />
+    <style>
+      body * {
+        font-family: monospace,"sans-serif";
+      }
+      footer {
+        padding: 0px 20px 10px;
+        background-color: #f1f1f1;
+        box-shadow: 0px 1px 5px #333;
+      }
+      footer .material-icons.team {
+        position: relative;
+        top: 7px;
+      }
+      a, .a {
+        outline: none;
+      }
+      .a {
+        cursor: pointer;
+      }
+      .mdl-chip__contact.total {
+        background-color: #333;
+        color: white;
+      }      
+      .mdl-card__subtitle-text .doc{
+        color: #3a97ff;
+      }
+      .mdl-chip__contact.doc {
+        background-color: #3a97ff;
+        color: white;
+      }
+      .mdl-chip__contact.passed {
+        background-color: #4cd676;
+        color: white;
+      }
+      .mdl-chip__contact.failed {
+        background-color: red;
+        color: white;
+      }
+      .mdl-chip--contact.actived {
+        zoom: 1.5;
+      }
+      .error {
+        color: red;
+      }
+      .passed {
+        color: #4cd676;
+      }
+      .failed {
+        color: red;
+      }
+      .api-method {
+        text-transform: uppercase;        
+      }
+      .api-method.head {
+        color: #61c1c1;
+      }
+      .api-method.get {
+        color: #c694ff;
+      }
+      .api-method.post {
+        color: #ff7272;
+      }
+      .api-method.put {
+        color: #ffac65;
+      }
+      .api-method.delete {
+        color: #636363;
+      }
+      .second {
+        color: #b9b9b9;
+      }
+      table tbody tr:nth-child(even) {
+        background-color: #f3f3f3;
+      }
+
+      table tbody tr:nth-child(even):hover{
+        background-color: #f3f3f3;
+      }
+      .opened {
+        background-color: #e7e7e7;
+      }
+      .mdl-badge.mdl-badge--overlap.doc:after {
+        color: white;
+        background-color: #3a97ff;
+        zoom: 50%;
+        left: -2px;
+        top: -2px;
+      }
+      .mdl-card {
+        min-height: auto;
+      }
+      dialog {
+        width: 80% !important;
+      }
+      .mdl-dialog__subtitle{
+        padding: 5px 23px;f
+      }
+      .mtable thead th {
+        color: #a4e1db;
+        text-shadow: 0px 0px 1px #353535;
+      }
+      .mtable thead tr {
+        background: rgb(0,150,136);
+      }
+      .demo-card-wide {
+        
+      }
+      @keyframes example {
+        from {
+          -ms-transform: rotate(0deg); /* IE 9 */
+          -webkit-transform: rotate(0deg); /* Chrome, Safari, Opera */
+          transform: rotate(0deg);
+        }
+        to {
+          -ms-transform: rotate(-360deg); /* IE 9 */
+          -webkit-transform: rotate(-360deg); /* Chrome, Safari, Opera */
+          transform: rotate(-360deg);
+        }
+      }
+      .loading {
+        animation-name: example;			
+        animation-duration: 0.2s;
+        animation-iteration-count: infinite;
+        animation-timing-function: linear;
+      }
+      details .disabled > summary {
+        opacity:0.3;
+        filter:alpha(opacity=30);
+      }
+      details[open] > summary{
+        font-weight: bold;
+      }
+      summary {
+        cursor: pointer;
+        outline: none;
+      }
+      pre {
+        margin: 0px;
+        overflow-x:auto;
+        white-space: pre-wrap;
+        word-break: break-all;
+      }
+      ::-webkit-scrollbar-track
+      {
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+        border-radius: 10px;
+        background-color: #F5F5F5;
+      }
+
+      ::-webkit-scrollbar
+      {
+        width: 4px;
+        height: 6px;
+        background-color: #F5F5F5;
+      }
+
+      ::-webkit-scrollbar-thumb
+      {
+        border-radius: 10px;
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+        background-color: #D62929;
+      }
+      .cell-code {
+        border: dotted 2px #ccc;
+        background-color: white;
+        padding: 5px 8px;
+        border-radius: 8px;
+        color: #333;
+      }
+      .cell-code pre .string { color: #6e549d; }        
+      .cell-code pre .number { color: #499996; }
+      .cell-code pre .boolean { color: #8c4e84; }
+      .cell-code pre .null { color: #979797; }
+      .cell-code pre .key { color: #8c6363; }
+      .request summary {
+        color: rgb(255, 0, 196);
+      }
+      .request .header summary {
+        color: rgb(171, 8, 133);
+      }
+      .request .body summary {
+        color: rgb(111, 0, 86);
+      }
+      .response summary {
+        color: rgb(57, 189, 106);
+      }
+      .response .header summary {
+        color: rgb(7, 115, 47);
+      }
+      .response .body summary {
+        color: rgb(2, 72, 28);
+      }
+      .variable,
+      .variable summary {
+        color: #004490;
+      }
+      .checker summary {
+        color: #dc2121;
+      }
+      .copy:hover {
+        color: #929292;
+      }
+      .copy i {
+        font-size: 15px;
+      }
+      .copy {
+        float: right;
+        margin-top: -6px;
+        margin-right: -10px;
+        color: #ccc;
+        font-size: 10px;
+      }
+      .mdl-grid.mdl-grid--no-padding{
+        padding: 0px;
+      }
+      .request .samp, .response .samp {
+        padding: 0px 16px;
+      }
+      .mdl-card__menu .mdl-chip {
+        background-color: #fff;        
+      }
+    </style>
+  </head>
+
+  <body ng-controller="MainCtrl as ctrl" ng-show="ctrl.data">
+    <dialog class="mdl-dialog">
+      <div class="mdl-dialog__title mdl-color-text--primary">APIs in the project</div>
+      <div class="mdl-dialog__subtitle second">Press ESC to close</div>
+      <hr/>
+      <div class="mdl-dialog__content">
+        <nav class="mdl-navigation">
+          <div ng-repeat="tc in ctrl.data.testcases">
+            <h5>{{tc.des}}</h5>
+            <ul style="list-style-type: decimal;">
+              <a href="#{{$parent.$index}}-{{$index}}" ng-repeat="api in tc.apis" ng-click="ctrl.toBookmark()">
+                <li>                
+                  {{api.des}}
+                </li>
+              </a>
+            </ul>  
+          </div>
+        </nav>
+      </div>
+    </dialog>
+    <div class="mdl-layout mdl-js-layout">
+      <main class="mdl-layout__content">
+        <div class="demo-card-wide mdl-card mdl-shadow--0dp" style="width: 100%">
+          <div class="mdl-card__title">
+            <div>
+              <div class="mdl-card__title-text" style="text-transform: capitalize;"><i class="material-icons">bubble_chart</i> {{ctrl.data.projectName}}</div>
+              <div class="mdl-card__subtitle-text"><strong class="doc">APIs Testing Result</strong></div>
+              <div class="mdl-card__subtitle-text">Time execution: {{ctrl.data.duration | number}} ms</div>
+            </div>
+          </div>
+          <div class="mdl-card__supporting-text">
+            <div>
+              <span class="mdl-chip mdl-chip--contact a" ng-click="ctrl.filter=0;" ng-class="{'actived': !ctrl.filter}">
+                  <span class="mdl-chip__contact total">{{ctrl.passed + ctrl.failed}}</span>
+                  <span class="mdl-chip__text">Total</span>
+              </span>
+              <span class="mdl-chip mdl-chip--contact a" ng-click="ctrl.filter=1;" ng-class="{'actived': ctrl.filter==1}">
+                  <span class="mdl-chip__contact passed">{{ctrl.passed}}</span>
+                  <span class="mdl-chip__text">Passed</span>
+              </span>
+              <span class="mdl-chip mdl-chip--contact a" ng-click="ctrl.filter=-1;" ng-class="{'actived': ctrl.filter==-1}">
+                  <span class="mdl-chip__contact failed">{{ctrl.failed}}</span>
+                  <span class="mdl-chip__text">Failed</span>
+              </span>
+              <span class="mdl-chip mdl-chip--contact a" ng-click="ctrl.filter=2;" ng-class="{'actived': ctrl.filter==2}">
+                  <span class="mdl-chip__contact doc">{{ctrl.doc}}</span>
+                  <span class="mdl-chip__text">DOC</span>
+              </span>
+            </div>
+          </div>
+        </div>
+        <br/><br/>
+        <div class="demo-card-wide mdl-card mdl-shadow--2dp" ng-repeat="tc in ctrl.data.testcases" ng-init="tc.passed=0; tc.failed=0;" style="width: 100%;">
+          <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp mtable" width="100%">
+            <thead>
+              <tr>
+                <th class="mdl-data-table__cell--non-numeric" colspan="3" style="color: #fff" title="{{tc.des}}">
+                  <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 400px;">
+                    <i class="material-icons" style="position: relative; top: 7px">blur_on</i> {{tc.des}}
+                  </div>
+                </th>
+                <th width="1">Status</th>
+                <th class="mdl-data-table__cell--non-numeric" width="1">Variable</th>
+                <th class="mdl-data-table__cell--non-numeric">Error</th>
+              </tr>
+            </thead>
+            <tbody ng-repeat="api in tc.apis" id="{{$parent.$index}}-{{$index}}">
+              <tr ng-click="api.isShowMore=!api.isShowMore;" ng-class="{'opened': api.isShowMore}" class="a" ng-show="!ctrl.filter || (ctrl.filter == 1 && !api.error) || (ctrl.filter == -1 && api.error) || (ctrl.filter == 2 && api.doc)">
+                <td class="mdl-data-table__cell--non-numeric" width="1">
+                  <div class="material-icons mdl-badge mdl-badge--overlap doc passed" data-badge="D" title="Export to DOC" ng-if="api.doc && !api.error" ng-init="tc.passed=tc.passed+1; ctrl.passed=ctrl.passed+1; ctrl.doc=ctrl.doc+1;">grain</div>
+                  <div class="material-icons mdl-badge mdl-badge--overlap doc failed" data-badge="D" title="Export to DOC" ng-if="api.doc && api.error" ng-init="tc.failed=tc.failed+1; ctrl.failed=ctrl.failed+1; ctrl.doc=ctrl.doc+1;">grain</div>
+                  <i class="material-icons passed" ng-if="!api.doc && !api.error" ng-init="tc.passed=tc.passed+1; ctrl.passed=ctrl.passed+1;">grain</i>
+                  <i class="material-icons failed" ng-if="!api.doc && api.error" ng-init="tc.failed=tc.failed+1; ctrl.failed=ctrl.failed+1;">grain</i>          
+                </td>
+                <td class="mdl-data-table__cell--non-numeric api-method" ng-class="api.method" width="90">
+                  <b>{{api.method}}</b>            
+                </td>
+                <td class="mdl-data-table__cell--non-numeric" width="1">
+                  <button ng-click="api.isShowMore=!api.isShowMore; ctrl.replay(tc, api, $parent.$index, $index)" ng-disabled="api.isReplay" ng-class="{'loading': api.isReplay}" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored" style="float: left; zoom: 50%; margin-right: 8px;">
+                    <i class="material-icons">replay</i>
+                  </button>
+                  <div ng-if="ctrl.filter != 2" style="text-transform: capitalize;">{{api.des}}</div>
+                  <div ng-if="ctrl.filter == 2" style="text-transform: capitalize;">{{api.title}}</div>
+                  <div><small class="second">{{api.url}}</small></div>
+                </td>
+                <td ng-class="{'passed': !api.error, 'failed': api.error}">
+                  {{api.responseStatus}}
+                  <div><small class="second">{{api.duration | number}} ms</small></div>
+                </td>
+                <td class="mdl-data-table__cell--non-numeric"><var class="variable" ng-if="api.var"><em>{{api.var}}</em></var></td>
+                <td class="mdl-data-table__cell--non-numeric">
+                  <div class="error" style="word-break: break-all; white-space: initial;">
+                    <div>{{api.error.mes}}</div>
+                    <div ng-if="api.error.details">{{api.error.details | jsoner}}</div>
+                  </div>
+                </td>
+              </tr>
+              <tr ng-show="api.isShowMore">
+                <td colspan="6" class="mdl-data-table__cell--non-numeric">
+                  <div class="mdl-grid mdl-grid--no-padding">
+                    <div class="mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--4-col-phone mdl-cell--stretch">
+                      <details class="request" open ng-class="{'disabled': !api.requestHeader && !api.requestBody}">
+                        <summary>Request</summary>
+                        <div class="samp">
+                          <details class="header" open ng-class="{'disabled': !api.requestHeader}">
+                            <summary>Header</summary>
+                            <div class="cell-code" ng-if='api.requestHeader'>
+                              <button ng-if="ctrl.isSupportCopy" id="request-header-{{$parent.$index}}-{{$index}}" ng-click='ctrl.copy(api.responseHeader)' class="mdl-button mdl-js-button mdl-button--icon copy" ><i class="material-icons">content_copy</i></button>
+                              <div class="mdl-tooltip" for="request-header-{{$parent.$index}}-{{$index}}">{{ctrl.copyName}}</div>
+                              <pre ng-bind-html="api.requestHeader | header"></pre>
+                            </div>
+                          </details>
+                          <details class="body" open ng-class="{'disabled': !api.requestBody}">
+                            <summary>Body</summary>
+                            <div class="cell-code" ng-if='api.requestBody'>
+                              <button ng-if="ctrl.isSupportCopy" id="request-body-{{$parent.$index}}-{{$index}}" ng-click='ctrl.copy(api.responseBody)' class="mdl-button mdl-js-button mdl-button--icon copy" ><i class="material-icons">content_copy</i></button>
+                              <div class="mdl-tooltip" for="request-body-{{$parent.$index}}-{{$index}}">{{ctrl.copyName}}</div>
+                              <pre ng-bind-html="api.requestBody | jsoner"></pre>
+                            </div>
+                          </details>
+                        </div>
+                      </details>
+                      <details class="response" open ng-class="{'disabled': !api.responseHeader && !api.responseBody}">
+                        <summary>Response ({{api.responseStatus}})</summary>
+                        <div class="samp">
+                          <details class="header" open ng-class="{'disabled': !api.responseHeader}">
+                            <summary>Header</summary>
+                            <div class="cell-code" ng-if='api.responseHeader'>
+                              <button ng-if="ctrl.isSupportCopy" id="response-header-{{$parent.$index}}-{{$index}}" ng-click='ctrl.copy(api.responseHeader)' class="mdl-button mdl-js-button mdl-button--icon copy" ><i class="material-icons">content_copy</i></button>
+                              <div class="mdl-tooltip" for="response-header-{{$parent.$index}}-{{$index}}">{{ctrl.copyName}}</div>
+                              <pre ng-bind-html="api.responseHeader | header"></pre>
+                            </div>
+                          </details>
+                          <details class="body" open ng-class="{'disabled': !api.responseBody}">
+                            <summary>Body</summary>
+                            <div class="cell-code" ng-if='api.responseBody'>
+                              <button ng-if="ctrl.isSupportCopy" id="response-body-{{$parent.$index}}-{{$index}}" ng-click='ctrl.copy(api.responseBody)' class="mdl-button mdl-js-button mdl-button--icon copy" ><i class="material-icons">content_copy</i></button>
+                              <div class="mdl-tooltip" for="response-body-{{$parent.$index}}-{{$index}}">{{ctrl.copyName}}</div>
+                              <pre ng-bind-html="api.responseBody | jsoner"></pre>
+                            </div>
+                          </details>
+                        </div>
+                      </details>
+                    </div>
+                    <div class="mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--4-col-phone mdl-cell--stretch">
+                      <details class="variable" ng-if="api.var">
+                        <summary><var>{{api.var}}</var><small> &lt;&lt;variable&gt&gt</small></summary>
+                        <div class="cell-code">
+                          <pre ng-bind-html='api["#var"] | jsoner'></pre>
+                        </div>
+                      </details> 
+                      <details class="checker" open>
+                        <summary>Checker</summary>
+                        <div class="cell-code" ng-if="api.checker">
+                          <pre ng-bind-html="api.checker | jsoner"></pre>
+                        </div>
+                      </details>                              
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="mdl-card__menu">
+            <div style="margin-top: -10px;">
+              <span class="mdl-chip">
+                <span class="mdl-chip__text passed">{{tc.passed}}</span>
+              </span>
+              <span class="mdl-chip">
+                <span class="mdl-chip__text failed">{{tc.failed}}</span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </main>
+      <footer>
+        <i class="material-icons team">developer_board</i> {{ctrl.data.team}}
+        <button id="quickSearch" style="position: absolute; right: 0px;" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored" ng-click="ctrl.showBookmark()" >
+          <i class="material-icons">subject</i>
+        </button>
+        <div class="mdl-tooltip mdl-tooltip--top" data-mdl-for="quickSearch">
+          Quick search (F1)
+        </div>
+      </footer>
+    </div>
+  </body>
+  <script defer src="https://code.getmdl.io/1.2.0/material.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
+  <script src="https://code.angularjs.org/1.5.8/angular-sanitize.min.js"></script>
+  <script src="http://www.openjs.com/scripts/events/keyboard_shortcuts/shortcut.js"></script>
+  <script type="text/javascript">
+    var dialog = document.querySelector('dialog');
+    shortcut.add("F1", function() {
+      if(dialog.hasAttribute('open')) dialog.close();
+      else dialog.showModal(); 
+    });
+    angular.module('myApp', ['ngSanitize'])
+    .factory('clipboard', ['$document', '$window', function ($document, $window) {
+        function createNode(text, context) {
+            var node = $document[0].createElement('textarea');
+            node.style.position = 'absolute';
+            node.textContent = text;
+            node.style.left = '-10000px';
+            node.style.top = ($window.pageYOffset || $document[0].documentElement.scrollTop) + 'px';
+            return node;
+        }
+
+        function copyNode(node) {
+            try {
+                // Set inline style to override css styles
+                $document[0].body.style.webkitUserSelect = 'initial';
+
+                var selection = $document[0].getSelection();
+                selection.removeAllRanges();
+                node.select();
+
+                if(!$document[0].execCommand('copy')) {
+                    throw('failure copy');
+                }
+                selection.removeAllRanges();
+            } finally {
+                // Reset inline style
+                $document[0].body.style.webkitUserSelect = '';
+            }
+        }
+
+        function copyText(text, context) {
+            var node = createNode(text, context);
+            $document[0].body.appendChild(node);
+            copyNode(node);
+            $document[0].body.removeChild(node);
+        }
+
+        return {
+            copyText: copyText,
+            supported: 'queryCommandSupported' in $document[0] && $document[0].queryCommandSupported('copy')
+        };
+    }])
+    .filter('jsoner', ['$sce', function($sce) {
+      var syntaxHighlight = (json) => {
+        json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+          var cls = 'number';
+          if (/^"/.test(match)) {
+            if (/:$/.test(match)) {
+              cls = 'key';
+            } else {
+              cls = 'string';
+            }
+          } else if (/true|false/.test(match)) {
+            cls = 'boolean';
+          } else if (/null/.test(match)) {
+            cls = 'null';
+          }
+          return '<span class="' + cls + '">' + match + '</span>';
+        });
+      }
+      return (input) => {
+        return $sce.trustAsHtml(syntaxHighlight(JSON.stringify(input, undefined, 2)));
+      };
+    }])
+    .filter('header', ['$sce', function($sce) {
+      return function(input) {
+        var str = [];
+        for(var i in input){
+          if(str.length > 0) str.push("\n");
+          str.push(`<span class="key">"${i}"</span>: <span class="${typeof input[i]}">"${input[i]}"</span>`);
+        }
+        return $sce.trustAsHtml(str.join(''));
+      };
+    }])
+    .controller('MainCtrl', ['$scope', 'clipboard', '$filter', '$http', function MainCtrl($scope, clipboard, $filter, $http) {
+      this.isSupportCopy = clipboard.supported;
+      this.copyName = 'Copy';
+      var self = this;
+      this.copy = (vl) => {
+          clipboard.copyText(vl instanceof Object ? $filter('json')(vl) : vl);
+          self.copyName = 'Copied';          
+          setTimeout(()=>{
+            $scope.$apply(()=>{
+              self.copyName = 'Copy';
+            });            
+          }, 1000);
+      }
+      this.replay = (tc, api, itc, iapi) => {
+        api.isReplay = true;
+        $http.post('http://localhost:61188/re-run', {t: itc, a: iapi}).then(res => {
+          setTimeout(() => {
+            $scope.$apply(()=>{
+              if(api.error && !res.data.error) {
+                tc.failed--;
+                this.failed--;
+                this.doc--;
+              }else if(!api.error && res.data.error){
+                tc.passed--;
+                this.passed--;
+                this.doc--;
+              }
+              delete api.error;
+              api = Object.assign(api, res.data);
+              api.isReplay = false;
+            });          
+          }, 500);         
+        }, err => {
+          setTimeout(() => {
+            api.status = err.status;
+            $scope.$apply(()=>{
+              api.error = {
+                mes: err
+              };
+              api.isReplay = false;
+            });          
+          }, 500);        
+        });
+      }
+      this.showBookmark = () => {
+        dialog.showModal();
+      };
+      this.toBookmark = ()=>{
+        dialog.close();
+      }
+      this.data = {"testcases":[{"des":"Testcase for User","declareVar":{"username01":"1473323945055"},"defaultInit":{"skipError":true,"allowResponseHeader":["appid","access_token"],"requestHeader":{"content-type":"application/json"},"transformRequest":"json","checker":[{"status":200}]},"apis":[{"skipError":true,"allowResponseHeader":["appid","access_token"],"requestHeader":{"content-type":"multipart/form-data"},"transformRequest":"form","checker":[{"size":1}],"key":"user-upload","des":"Upload user avatar","method":"post","url":"http://173.164.244.85:4000/whatseat/account/upload","nextCallAfter":0,"extends":"user-upload","requestBody":{"file:avatar":"C:\\Users\\thanh_xps13\\Desktop/vephat.jpg"},"var":"userAvatar","duration":449,"responseStatus":200,"responseBody":["images/account/aae0c50f-478f-4651-8dba-38ee00d8952e.jpg"],"#var":{"body":["images/account/aae0c50f-478f-4651-8dba-38ee00d8952e.jpg"]}},{"skipError":true,"allowResponseHeader":["appid","access_token"],"requestHeader":{"content-type":"application/json","app":"8765d4e06c66a6990673331b54450de3"},"transformRequest":"json","checker":[{"status":200}],"key":"user-signup","des":"Sign-up user","method":"post","url":"http://173.164.244.85:4000/whatseat/signup","requestBody":{"device":{"model":"Galaxy S7","platform":"Android","build_code":"Lolipop","build_number":"Lolipop","brand":"SamSung","device_id":""},"username":"1473323945055","email":"1473323945055@gmail.com","password":"aA1234","infor":{"fullname":"Test 1473323945055","gender":1,"phone":"0944123123","address":"xx xxx xxx","city":"xxxx","region":"xxx","country":"xx","location":{"lat":123.321123,"lng":32.3123432},"avatar":"images/account/aae0c50f-478f-4651-8dba-38ee00d8952e.jpg"}},"nextCallAfter":1000,"extends":"user-signup","var":"userDetails","duration":550,"responseStatus":200,"responseBody":{"app":"8765d4e06c66a6990673331b54450de3","username":"1473323945055","email":"1473323945055@gmail.com","infor":{"fullname":"Test 1473323945055","gender":1,"phone":"0944123123","address":"xx xxx xxx","city":"xxxx","region":"xxx","country":"xx","location":{"lat":123.321123,"lng":32.3123432},"avatar":"images/account/aae0c50f-478f-4651-8dba-38ee00d8952e.jpg"},"device":{"model":"Galaxy S7","platform":"Android","build_code":"Lolipop","build_number":"Lolipop","brand":"SamSung","device_id":""}},"#var":{"body":{"app":"8765d4e06c66a6990673331b54450de3","username":"1473323945055","email":"1473323945055@gmail.com","infor":{"fullname":"Test 1473323945055","gender":1,"phone":"0944123123","address":"xx xxx xxx","city":"xxxx","region":"xxx","country":"xx","location":{"lat":123.321123,"lng":32.3123432},"avatar":"images/account/aae0c50f-478f-4651-8dba-38ee00d8952e.jpg"},"device":{"model":"Galaxy S7","platform":"Android","build_code":"Lolipop","build_number":"Lolipop","brand":"SamSung","device_id":""}}}},{"skipError":true,"allowResponseHeader":["appid","access_token"],"requestHeader":{"content-type":"application/json","app":"8765d4e06c66a6990673331b54450de3"},"transformRequest":"json","checker":[{"status":200}],"key":"user-login","des":"Login by username","method":"post","url":"http://173.164.244.85:4000/whatseat/login","nextCallAfter":0,"extends":"user-login","requestBody":{"username":"1473323945055","password":"aA1234"},"var":"userLogin","duration":758,"responseStatus":200,"responseHeader":{"access_token":"QKuQy2acM1GMAa6WoX/etrKvP/P1lpfHjMSH7i2yCSzoeWikeo2fz1MIgs5w3gtPh3lL5FGn9qQiyjkWAqx98PYO8/N141/bzo72remjA+yO70FuwqwZRHTy4ud/HBuROyaxz2RS8214T9TyADL/LJKB9SMpEkSjYLkW1rMMmDE="},"responseBody":{"id":"9ab23206-cb86-4d68-b3b6-5375006851e5","username":"1473323945055","email":"1473323945055@gmail.com","infor":{"fullname":"Test 1473323945055","gender":1,"phone":"0944123123","address":"xx xxx xxx","city":"xxxx","region":"xxx","country":"xx","avatar":"images/account/aae0c50f-478f-4651-8dba-38ee00d8952e.jpg","location":{"lat":123.321123,"lng":32.3123432}},"devices":[{"model":"Galaxy S7","platform":"Android","build_code":"Lolipop","build_number":"Lolipop","brand":"SamSung","device_id":""}],"reviews":null,"permissions":["category:*:9ab23206-cb86-4d68-b3b6-5375006851e5","meal:*:9ab23206-cb86-4d68-b3b6-5375006851e5","orders:*:9ab23206-cb86-4d68-b3b6-5375006851e5","place:*:9ab23206-cb86-4d68-b3b6-5375006851e5"]},"#var":{"header":{"access_token":"QKuQy2acM1GMAa6WoX/etrKvP/P1lpfHjMSH7i2yCSzoeWikeo2fz1MIgs5w3gtPh3lL5FGn9qQiyjkWAqx98PYO8/N141/bzo72remjA+yO70FuwqwZRHTy4ud/HBuROyaxz2RS8214T9TyADL/LJKB9SMpEkSjYLkW1rMMmDE="},"body":{"id":"9ab23206-cb86-4d68-b3b6-5375006851e5","username":"1473323945055","email":"1473323945055@gmail.com","infor":{"fullname":"Test 1473323945055","gender":1,"phone":"0944123123","address":"xx xxx xxx","city":"xxxx","region":"xxx","country":"xx","avatar":"images/account/aae0c50f-478f-4651-8dba-38ee00d8952e.jpg","location":{"lat":123.321123,"lng":32.3123432}},"devices":[{"model":"Galaxy S7","platform":"Android","build_code":"Lolipop","build_number":"Lolipop","brand":"SamSung","device_id":""}],"reviews":null,"permissions":["category:*:9ab23206-cb86-4d68-b3b6-5375006851e5","meal:*:9ab23206-cb86-4d68-b3b6-5375006851e5","orders:*:9ab23206-cb86-4d68-b3b6-5375006851e5","place:*:9ab23206-cb86-4d68-b3b6-5375006851e5"]}}},{"skipError":true,"allowResponseHeader":["appid","access_token"],"requestHeader":{"content-type":"application/json","app":"8765d4e06c66a6990673331b54450de3"},"transformRequest":"json","checker":[{"status":200}],"key":"user-login","des":"Login by email","method":"post","url":"http://173.164.244.85:4000/whatseat/login","nextCallAfter":0,"extends":"user-login","requestBody":{"username":"1473323945055@gmail.com","password":"aA1234"},"var":"userLogin","duration":777,"responseStatus":200,"responseHeader":{"access_token":"WSRf3RDCA2XgIt27mFCpETQtEPdYhWjTosxjDbNBLCToA3kKyWlTPxRosYK+KqngkhgTeW48qYIG4qrCDTQ6Jl8UWPqgVZSrwuy7Wv6YsjEKtl97lU3hVUcosNrD2ek9GYatIT+D97V3xr14MmzqQ/Le4vvpH3AllttK7fUeq0A="},"responseBody":{"id":"9ab23206-cb86-4d68-b3b6-5375006851e5","username":"1473323945055","email":"1473323945055@gmail.com","infor":{"fullname":"Test 1473323945055","gender":1,"phone":"0944123123","address":"xx xxx xxx","city":"xxxx","region":"xxx","country":"xx","avatar":"images/account/aae0c50f-478f-4651-8dba-38ee00d8952e.jpg","location":{"lat":123.321123,"lng":32.3123432}},"devices":[{"model":"Galaxy S7","platform":"Android","build_code":"Lolipop","build_number":"Lolipop","brand":"SamSung","device_id":""}],"reviews":null,"permissions":["category:*:9ab23206-cb86-4d68-b3b6-5375006851e5","meal:*:9ab23206-cb86-4d68-b3b6-5375006851e5","orders:*:9ab23206-cb86-4d68-b3b6-5375006851e5","place:*:9ab23206-cb86-4d68-b3b6-5375006851e5"]},"#var":{"header":{"access_token":"WSRf3RDCA2XgIt27mFCpETQtEPdYhWjTosxjDbNBLCToA3kKyWlTPxRosYK+KqngkhgTeW48qYIG4qrCDTQ6Jl8UWPqgVZSrwuy7Wv6YsjEKtl97lU3hVUcosNrD2ek9GYatIT+D97V3xr14MmzqQ/Le4vvpH3AllttK7fUeq0A="},"body":{"id":"9ab23206-cb86-4d68-b3b6-5375006851e5","username":"1473323945055","email":"1473323945055@gmail.com","infor":{"fullname":"Test 1473323945055","gender":1,"phone":"0944123123","address":"xx xxx xxx","city":"xxxx","region":"xxx","country":"xx","avatar":"images/account/aae0c50f-478f-4651-8dba-38ee00d8952e.jpg","location":{"lat":123.321123,"lng":32.3123432}},"devices":[{"model":"Galaxy S7","platform":"Android","build_code":"Lolipop","build_number":"Lolipop","brand":"SamSung","device_id":""}],"reviews":null,"permissions":["category:*:9ab23206-cb86-4d68-b3b6-5375006851e5","meal:*:9ab23206-cb86-4d68-b3b6-5375006851e5","orders:*:9ab23206-cb86-4d68-b3b6-5375006851e5","place:*:9ab23206-cb86-4d68-b3b6-5375006851e5"]}}},{"skipError":true,"allowResponseHeader":["appid","access_token"],"requestHeader":{"content-type":"application/json","access_token":"WSRf3RDCA2XgIt27mFCpETQtEPdYhWjTosxjDbNBLCToA3kKyWlTPxRosYK+KqngkhgTeW48qYIG4qrCDTQ6Jl8UWPqgVZSrwuy7Wv6YsjEKtl97lU3hVUcosNrD2ek9GYatIT+D97V3xr14MmzqQ/Le4vvpH3AllttK7fUeq0A="},"transformRequest":"json","checker":[{"status":200}],"key":"user-update","des":"Update user information","method":"put","url":"http://173.164.244.85:4000/whatseat/me","requestBody":{"device":{"model":"Galaxy S7 - updated","platform":"Android - updated","build_code":"Lolipop - updated","build_number":"Lolipop - updated","brand":"SamSung - updated","device_id":""},"infor":{"fullname":"Test register - updated","gender":0,"phone":"0944123123 - updated","address":"xx xxx xxx - updated","city":"xxxx - updated","region":"xxx - updated","country":"xx - updated","location":{"lat":123.321123,"lng":32.3123432},"avatar":"images/account/aae0c50f-478f-4651-8dba-38ee00d8952e.jpg"}},"nextCallAfter":0,"extends":"user-update","duration":855,"responseStatus":200,"responseBody":{"username":"1473323945055","email":"1473323945055@gmail.com","infor":{"fullname":"Test register - updated","gender":0,"phone":"0944123123 - updated","address":"xx xxx xxx - updated","city":"xxxx - updated","region":"xxx - updated","country":"xx - updated","location":{"lat":123.321123,"lng":32.3123432},"avatar":"images/account/aae0c50f-478f-4651-8dba-38ee00d8952e.jpg"},"device":{"model":"Galaxy S7 - updated","platform":"Android - updated","build_code":"Lolipop - updated","build_number":"Lolipop - updated","brand":"SamSung - updated","device_id":""},"reviews":null}},{"skipError":true,"allowResponseHeader":["appid","access_token"],"requestHeader":{"content-type":"application/json","access_token":"WSRf3RDCA2XgIt27mFCpETQtEPdYhWjTosxjDbNBLCToA3kKyWlTPxRosYK+KqngkhgTeW48qYIG4qrCDTQ6Jl8UWPqgVZSrwuy7Wv6YsjEKtl97lU3hVUcosNrD2ek9GYatIT+D97V3xr14MmzqQ/Le4vvpH3AllttK7fUeq0A="},"transformRequest":"json","checker":[{"equals":{"app":"8765d4e06c66a6990673331b54450de3","username":"1473323945055","email":"1473323945055@gmail.com","infor":{"fullname":"Test 1473323945055","gender":1,"phone":"0944123123","address":"xx xxx xxx","city":"xxxx","region":"xxx","country":"xx","location":{"lat":123.321123,"lng":32.3123432},"avatar":"images/account/aae0c50f-478f-4651-8dba-38ee00d8952e.jpg"},"device":{"model":"Galaxy S7","platform":"Android","build_code":"Lolipop","build_number":"Lolipop","brand":"SamSung","device_id":""}}}],"key":"user-details","des":"Get user details","method":"get","url":"http://173.164.244.85:4000/whatseat/me","nextCallAfter":0,"extends":"user-details","doc":{"title":"Get user details","responseBody":"user","requestHeader":"req.header","responseHeader":"res.header","groupName":"user","order":2},"var":"userDetails","title":"Get user details","duration":834,"responseStatus":200,"responseBody":{"id":"9ab23206-cb86-4d68-b3b6-5375006851e5","username":"1473323945055","email":"1473323945055@gmail.com","infor":{"fullname":"Test register - updated","gender":0,"phone":"0944123123 - updated","address":"xx xxx xxx - updated","city":"xxxx - updated","region":"xxx - updated","country":"xx - updated","avatar":"images/account/aae0c50f-478f-4651-8dba-38ee00d8952e.jpg","location":{"lat":123.321123,"lng":32.3123432}},"devices":[{"model":"Galaxy S7 - updated","platform":"Android - updated","build_code":"Lolipop - updated","build_number":"Lolipop - updated","brand":"SamSung - updated","device_id":""}],"reviews":null},"#var":{"body":{"id":"9ab23206-cb86-4d68-b3b6-5375006851e5","username":"1473323945055","email":"1473323945055@gmail.com","infor":{"fullname":"Test register - updated","gender":0,"phone":"0944123123 - updated","address":"xx xxx xxx - updated","city":"xxxx - updated","region":"xxx - updated","country":"xx - updated","avatar":"images/account/aae0c50f-478f-4651-8dba-38ee00d8952e.jpg","location":{"lat":123.321123,"lng":32.3123432}},"devices":[{"model":"Galaxy S7 - updated","platform":"Android - updated","build_code":"Lolipop - updated","build_number":"Lolipop - updated","brand":"SamSung - updated","device_id":""}],"reviews":null}},"error":{"mes":"Check data equals failed"}}]}],"path":"../projects/whatseat","projectName":"Test cuisine","team":"VN Team","duration":5258};
+  }]);
+  </script>
+
+  </html>
