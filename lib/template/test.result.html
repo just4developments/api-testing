@@ -124,7 +124,7 @@
       .demo-card-wide {
         
       }
-      @keyframes example {
+      @keyframes replaying {
         from {
           -ms-transform: rotate(0deg); /* IE 9 */
           -webkit-transform: rotate(0deg); /* Chrome, Safari, Opera */
@@ -133,12 +133,45 @@
         to {
           -ms-transform: rotate(-360deg); /* IE 9 */
           -webkit-transform: rotate(-360deg); /* Chrome, Safari, Opera */
-          transform: rotate(-360deg);
+          transform: rotate(-360deg);          
         }
       }
+      @keyframes replay-hover {
+        from {
+          -ms-transform: rotate(0); /* IE 9 */
+          -webkit-transform: rotate(0); /* Chrome, Safari, Opera */
+          transform: rotate(0);
+        }
+        25% {
+          -ms-transform: rotate(-20deg); /* IE 9 */
+          -webkit-transform: rotate(-20deg); /* Chrome, Safari, Opera */
+          transform: rotate(-20deg);
+        }
+        75% {
+          -ms-transform: rotate(20deg); /* IE 9 */
+          -webkit-transform: rotate(20deg); /* Chrome, Safari, Opera */
+          transform: rotate(20deg);
+        }
+        to {
+          -ms-transform: rotate(0deg); /* IE 9 */
+          -webkit-transform: rotate(0deg); /* Chrome, Safari, Opera */
+          transform: rotate(0deg);          
+        }
+      }
+      .avail:hover {
+        animation-name: replay-hover;			
+        animation-duration: 0.8s;
+        animation-iteration-count: infinite;
+        animation-timing-function: linear;
+      }
+      .replay {
+        zoom: 1;
+        box-shadow: none;
+      }
       .loading {
-        animation-name: example;			
-        animation-duration: 0.2s;
+        zoom: 0.9;
+        animation-name: replaying;			
+        animation-duration: 0.5s;
         animation-iteration-count: infinite;
         animation-timing-function: linear;
       }
@@ -238,6 +271,15 @@
       .mdl-card__menu .mdl-chip {
         background-color: #fff;        
       }
+      .mdl-button--fab.mdl-button--mini-fab.small {
+        width: 20px;
+        height: 20px;
+        min-height: 20px;
+        min-width: 20px;
+      }
+      .mdl-button--fab.mdl-button--mini-fab.small i {
+        font-size: 13px;
+      }
     </style>
   </head>
 
@@ -265,9 +307,9 @@
       <main class="mdl-layout__content">
         <div class="demo-card-wide mdl-card mdl-shadow--0dp" style="width: 100%">
           <div class="mdl-card__title">
-            <div>
+            <div style="width: 100%">
               <div class="mdl-card__title-text" style="text-transform: capitalize;"><i class="material-icons">bubble_chart</i> {{ctrl.data.projectName}}</div>
-              <div class="mdl-card__subtitle-text"><strong class="doc">APIs Testing Result</strong></div>
+              <div class="mdl-card__subtitle-text"><strong class="doc">APIs Testing Result</strong> <i class="material-icons error" ng-if="'debug' === ctrl.data.mode" title="Debug mode" style="font-size: 32px; float: left; margin-right: 3px;">bug_report</i></div>
               <div class="mdl-card__subtitle-text">Time execution: {{ctrl.data.duration | number}} ms</div>
             </div>
           </div>
@@ -319,7 +361,7 @@
                   <b>{{api.method}}</b>            
                 </td>
                 <td class="mdl-data-table__cell--non-numeric" width="1">
-                  <button ng-click="api.isShowMore=!api.isShowMore; ctrl.replay(tc, api, $parent.$index, $index)" ng-disabled="api.isReplay" ng-class="{'loading': api.isReplay}" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored" style="float: left; zoom: 50%; margin-right: 8px;">
+                  <button title="{{'debug' !== ctrl.data.mode ? 'Only for DEBUG mode' : ''}}" ng-click="api.isShowMore=!api.isShowMore; ctrl.replay(tc, api, $parent.$index, $index)" ng-disabled="'debug' !== ctrl.data.mode || api.isReplay" ng-class="{'loading': api.isReplay, 'avail': (!api.isReplay && 'debug' === ctrl.data.mode)}" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored small replay" style="float: left; margin-right: 8px;">
                     <i class="material-icons">replay</i>
                   </button>
                   <div ng-if="ctrl.filter != 2" style="text-transform: capitalize;">{{api.des}}</div>
@@ -481,6 +523,7 @@
     }])
     .filter('jsoner', ['$sce', function($sce) {
       var syntaxHighlight = (json) => {
+        if(!json) return '';
         json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
         return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
           var cls = 'number';

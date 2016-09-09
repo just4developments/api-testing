@@ -1,15 +1,15 @@
 {
-  "name": "api-testing",
-  "version": "1.0.0",
-  "description": "",
+  "name": "api-testing-tool",
+  "version": "1.0.1",
+  "description": "api testing, test api, api, test",
   "main": "index.js",
   "scripts": {
     "start": "node ./projects/demo/server/server.js",
-    "test": "node ./src/index.js test",
-    "debug": "node ./src/index.js debug",
-    "doc": "node ./src/index.js doc"
+    "test": "node ./index.js test",
+    "debug": "node ./index.js debug",
+    "doc": "node ./index.js doc"
   },
-  "author": "",
+  "author": "just4developments@gmail.com",
   "license": "ISC",
   "dependencies": {
     "async": "^2.0.1",
