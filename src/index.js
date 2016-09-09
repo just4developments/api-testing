@@ -28,6 +28,8 @@ main.exec(mainConfig => {
       exporter.toDocHtml(doc, (config, fileOut) => {
         console.info(`\n\n***** Please see doc file in "${fileOut}"`);
         openWhenFinish(fileOut, mainConfig.browser);
+      }, err => {
+        console.error(err);
       });
     });
   }else {
@@ -43,6 +45,8 @@ main.exec(mainConfig => {
         }else{
           openWhenFinish(fileOut, mainConfig.browser);
         }
+      }, err => {
+        console.error(err);
       });
     });    
   }
