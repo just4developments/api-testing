@@ -22,24 +22,11 @@ Features:
 
 api-testing-tool is testing tool which use javascript is base. So you can write testcase, customize by javascript
 
-### Tech
 
-api-testing-tool uses a number of open source projects to work properly:
-
-* [AngularJS] - HTML enhanced for web apps!
-* [Visual Studio Code] - code editor
-* [node.js] - evented I/O for the backend
-* [ExpressJS] - fast node.js network app framework
-* [unirest] - Lightweight HTTP Request Client Libraries
-* [open] - library which help open a file or url in the user's preferred application
-* [async] - Async is a utility module
-
-And of course api-testing-tool itself is open source with a https://github.com/just4developments/api-testing-tool
- on GitHub.
 
 ### Installation
 
-api-testing-tool requires [Node.js](https://nodejs.org/) v4+ to run.
+Api-testing-tool requires [Node.js](https://nodejs.org/) v4+ to run.
 
 Download and extract the [latest pre-built release](https://github.com/just4developments/api-testing-tool).
 
@@ -51,11 +38,15 @@ $ npm install
 ```
 open testing server which help response our request
 ```sh
-$ node start
+$ npm start
 ```
 play testcase demo
 ```sh
-$ node test demo
+$ npm test demo
+```
+Create new project to use in your project
+```sh
+$ npm run gen "PROJECT NAME"
 ```
 
 ### Todos
@@ -64,6 +55,22 @@ $ node test demo
  - Run test or debug testcase
  - After test ok, export to HTML doc
 
+### Tech
+
+api-testing-tool uses a number of open source projects to work properly:
+
+* [AngularJS] - HTML enhanced for web apps!
+* [Visual Studio Code] - code editor
+* [node.js] - evented I/O for the backend
+* [ExpressJS] - fast node.js network app framework
+* [unirest] - Lightweight HTTP Request Client Libraries
+* [open] - library which help open a file or url in the user's preferred application
+* [copy-dir] -  library which help copy template
+* [async] - Async is a utility module
+
+And of course api-testing-tool itself is open source with a https://github.com/just4developments/api-testing-tool
+ on GitHub.
+ 
 License
 ----
 
