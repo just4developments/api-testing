@@ -39,12 +39,12 @@ exports = module.exports = {
       "#": "List user",
       "${user}": undefined
     },
-    "req.header": {
+    "req:header": {
       "content-type": "Request content type",
       "access_token": "User access token which is gotten after user login done",
       "app": "App ID which you login, signup... Each app have one App ID (Itogo, Shopkeeper...)"
     },
-    "res.header": {
+    "res:header": {
       "access_token": "User access token which is gotten after user login done",
     }
   }

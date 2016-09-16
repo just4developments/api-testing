@@ -2,14 +2,13 @@ module.exports = {
   des: "Declare user API",
   disabled: true,
   defaultInit: {
-
+    
   },
   apis: [{
     key: "user-upload",
     des: "Upload user avatar",
     method: "POST",
     url: "${host}/whatseat/account/upload",
-    transformRequest: "form",
     requestHeader: {
       "content-type": "multipart/form-data"
     },

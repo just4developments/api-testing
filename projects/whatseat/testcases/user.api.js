@@ -84,7 +84,7 @@ module.exports = {
     checker: [{
       equals: "${userDetails.body}"
     }],
-    doc: {title: "Get user details", responseBody: "user", requestHeader: "req.header", responseHeader: "res.header", groupName: "user", order: 2},
+    doc: {title: "Get user details", responseBody: "user", requestHeader: "req:header", responseHeader: "res:header", groupName: "user", order: 2},
     var: "userDetails"
   }]
 }

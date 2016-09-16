@@ -9,7 +9,6 @@ module.exports = {
     des: "Ping user",
     method: "head",
     url: "${host}/user",
-    transformRequest: "json",
     checker: [
       {equals: {
         ping: 'ok'

@@ -12,7 +12,6 @@ module.exports = {
       requestHeader: {
         "content-type": "application/json"
       },
-      transformRequest: "json", // form or json
       checker: [
         {status: [200]}
       ]
@@ -21,5 +20,6 @@ module.exports = {
       
     }
   },
-  testcases: ['declare/user','user']
+  apiTemplates:['user'],
+  testcases: ['user']
 }

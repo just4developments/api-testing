@@ -9,7 +9,7 @@ _doc.js           : Declare your APIs document
 _main.js          : Global config for project
 _utils.js         : Declare your customize utils function
 _checker.js       : Declare your customize checkers
-_version.ini      : Declare changes in the new APIs document
+_version.md      : Declare changes in the new APIs document
 
 
 #How to run

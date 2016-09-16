@@ -17,10 +17,10 @@ exports = module.exports = {
       "#": "List user",
       "${user}": undefined
     },
-    "req.header": {
+    "req:header": {
       "content-type": "Loai header"
     },
-    "res.header": {
+    "res:header": {
       
     }
   }
