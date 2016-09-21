@@ -9,6 +9,11 @@ var users = [
   {"name": "Thanh", "age": 21, "address": { "street": "LY, HN"}}
 ];
 
+app.get('/ping', function (req, res) {
+  res.set('content-type', 'text/plain');
+  res.send('Ok');
+});
+
 app.get('/user', function (req, res) {
   res.send(users);
 });

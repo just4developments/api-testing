@@ -1,7 +1,7 @@
 {
   "name": "api-testing-tool",
-  "version": "1.0.1",
-  "description": "api testing, test api, api, test",
+  "version": "1.0.2",
+  "description": "api testing, test api, api, test, tool",
   "main": "index.js",
   "scripts": {
     "start": "node ./projects/demo/server/server.js",
