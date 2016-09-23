@@ -28,7 +28,7 @@ api-testing-tool is testing tool which use javascript is base. So you can write 
 
 Api-testing-tool requires [Node.js](https://nodejs.org/) v4+ to run.
 
-Download and extract the [latest pre-built release](https://github.com/just4developments/api-testing-tool).
+Download and extract the [latest pre-built release](https://github.com/just4developments/api-testing).
 
 Install the dependencies and devDependencies and start the server.
 
@@ -68,7 +68,7 @@ api-testing-tool uses a number of open source projects to work properly:
 * [copy-dir] -  library which help copy template
 * [async] - Async is a utility module
 
-And of course api-testing-tool itself is open source with a https://github.com/just4developments/api-testing-tool
+And of course api-testing-tool itself is open source with a https://github.com/just4developments/api-testing
  on GitHub.
  
 License

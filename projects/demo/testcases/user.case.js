@@ -1,7 +1,7 @@
 module.exports = {
   des: "All api for cuisine",
   declareVar: {
-    // host: 'abc.com' //overide var in main
+    // host: 'abc.com' //overide var in _main.js
   },
   defaultInit: {
     checker: {

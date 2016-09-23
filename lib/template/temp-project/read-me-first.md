@@ -2,14 +2,14 @@
 
 #Structure
 
-output/           : Test resut and APIs document will be export to here
-testcases/        : Your testcase file
-testcases/delcare : Your template api file 
-_doc.js           : Declare your APIs document
-_main.js          : Global config for project
-_utils.js         : Declare your customize utils function
-_checker.js       : Declare your customize checkers
-_version.md      : Declare changes in the new APIs document
+output/             : Test resut and APIs document will be export to here
+testcases/          : Your testcase file (ext: .case.js)
+testcases/templates : Your template api file (ext: .temp.js)
+_doc.js             : Declare your APIs document
+_main.js            : Global config for project
+_utils.js           : Declare your customize utils function
+_checker.js         : Declare your customize checkers
+_version.md         : Declare changes in the new APIs document
 
 
 #How to run

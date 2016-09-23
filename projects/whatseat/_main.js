@@ -22,6 +22,6 @@ module.exports = {
       
     }
   },
-  apiTemplates: '*', // ['user'] locate to templates/
-  testcases: ['user'] // without .api.js
-}
+  apiTemplates: '*', // ['user'] without .temp.js. Locate to templates/
+  testcases: ['user'] // without .case.js
+};
