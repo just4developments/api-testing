@@ -33,7 +33,7 @@ Download and extract the [latest pre-built release](https://github.com/just4deve
 Install the dependencies and devDependencies and start the server.
 
 ```sh
-$ cd api-testing-tool
+$ cd api-testing
 $ npm install
 ```
 open testing server which help response our request

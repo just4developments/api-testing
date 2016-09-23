@@ -4,4 +4,4 @@ module.exports = {
       mes: 'test fail'
     };
   }
-}
+};
