@@ -7,7 +7,7 @@
       "request": "launch",
       "program": "${workspaceRoot}/index.js",
       "stopOnEntry": false,
-      "args": ["doc"],
+      "args": ["test"],
       "cwd": "${workspaceRoot}",
       "preLaunchTask": null,
       "runtimeExecutable": null,

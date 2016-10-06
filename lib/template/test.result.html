@@ -376,7 +376,7 @@
                 <td class="mdl-data-table__cell--non-numeric">
                   <div class="error" style="word-break: break-all; white-space: initial;">
                     <div>{{api.error.mes}}</div>
-                    <div ng-if="api.error.details">{{api.error.details | jsoner}}</div>
+                    <div ng-if="api.error.details" ng-bind-html="api.error.details | jsoner"></div>
                   </div>
                 </td>
               </tr>
