@@ -55,6 +55,26 @@ $ npm run gen "PROJECT NAME"
  - Run test or debug testcase
  - After test ok, export to HTML doc
 
+### Version
+
+ - 1.0.0 : Initial
+ - 1.0.2 : Add check data type function. 
+   - You can use `instanceof` to validate data type. 
+   - Data type can be in 
+     - `String`: Must be String 
+     - `Stringable`: String or null
+     - `Number`: Must be Number
+     - `Numberable`: Number or null
+     - `Boolean`: Must be Boolean
+     - `Booleanable`: Boolean or null
+     - `Array`: Must be Array
+     - `Arrayable`: Array or null
+     - `Object`: Must be Object
+     - `Objectable`: Object or null 
+     - `Dateable`: Date or null
+     - `Date`: Must be Date
+     - `Whatever`: no check
+
 ### Tech
 
 api-testing-tool uses a number of open source projects to work properly:
