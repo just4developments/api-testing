@@ -219,6 +219,7 @@
         border-radius: 8px;
         color: #333;
       }
+      .cell-code pre .class { color: #ff3131; }
       .cell-code pre .string { color: #6e549d; }        
       .cell-code pre .number { color: #499996; }
       .cell-code pre .boolean { color: #8c4e84; }
@@ -530,8 +531,14 @@
           if (/^"/.test(match)) {
             if (/:$/.test(match)) {
               cls = 'key';
-            } else {
-              cls = 'string';
+            } else{
+              var m = match.match(/"\$\((.+)\)"/);
+              if(m){
+                cls = 'class';
+                match = m[1];
+              } else {
+                cls = 'string';
+              }
             }
           } else if (/true|false/.test(match)) {
             cls = 'boolean';
