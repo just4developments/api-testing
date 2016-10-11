@@ -58,24 +58,120 @@ $ npm run gen "PROJECT NAME"
 ### Version
 
  - 1.0.0 : Initial
- - 1.0.2 : Add check data type function. 
-   - You can use `instanceof` to validate data type. 
-   - Data type can be in 
-     - `String`: Must be String 
-     - `Stringable`: String or null
-     - `Number`: Must be Number
-     - `Numberable`: Number or null
-     - `Boolean`: Must be Boolean
-     - `Booleanable`: Boolean or null
-     - `Array`: Must be Array
-     - `Arrayable`: Array or null
-     - `Object`: Must be Object
-     - `Objectable`: Object or null 
-     - `Dateable`: Date or null
-     - `Date`: Must be Date
-     - `RegExp`: Must be Regex expression which match string
-     - `RegExpable`: Regex expression or null
-     - `Any`: no check
+ - 1.0.2 : Add check data type function. You can use `instanceof` to validate data type. 
+
+### Checker function
+
+Check http response status must be in your expection
+```
+{ status : 200 }
+or 
+{ status: [200, 201] }
+```
+
+Check response size (Array or string)
+```
+{ size: 10 }
+or 
+{ size: { '=': 10} }
+{ size: { '>': 10} }
+{ size: { '>=': 10} }
+{ size: { '<': 10} }
+{ size: { '<=': 10} }
+```
+
+Check array or object EQUALS another
+```
+{ equals: [
+    {id: 1, name: 'thanh', age: 20 },
+    {id: 2, name: 'bill', age: 22 },
+  ] 
+}
+or 
+{ equals: {id: 1, name: 'thanh', age: 20 } }
+```
+
+Check array or object NOT EQUALS another
+```
+{ '!equals': [
+    {id: 1, name: 'thanh', age: 20 },
+    {id: 2, name: 'bill', age: 22 },
+  ] 
+}
+or 
+{ '!equals': {id: 1, name: 'thanh', age: 20 } }
+```
+
+Check array CONTAINS other object or array
+```
+{ contains: [
+    {id: 1, name: 'thanh', age: 20 },
+    {id: 2, name: 'bill', age: 22 },
+  ] 
+}
+or 
+{ contains: {id: 1, name: 'thanh', age: 20 } }
+```
+
+Check array is NOT CONTAINS other object or array
+```
+{ '!contains': [
+    {id: 1, name: 'thanh', age: 20 },
+    {id: 2, name: 'bill', age: 22 },
+  ] 
+}
+or 
+{ '!contains': {id: 1, name: 'thanh', age: 20 } }
+```
+
+Check array, object IN other array
+```
+{ in: [
+    {id: 1, name: 'thanh', age: 20 },
+    {id: 2, name: 'bill', age: 22 },
+  ] 
+}
+or 
+{ in: {id: 1, name: 'thanh', age: 20 } }
+```
+
+Check array, object NOT IN other array
+```
+{ '!in': [
+    {id: 1, name: 'thanh', age: 20 },
+    {id: 2, name: 'bill', age: 22 },
+  ] 
+}
+or 
+{ '!in': {id: 1, name: 'thanh', age: 20 } }
+```
+
+Check data type is INSTANCE OF the type
+```
+{ instanceof: String }
+or 
+{ instanceof: /\d+/ }
+or 
+{ instanceof: Dateable }
+or 
+{ id: Number, name: Stringable, birthday: Dateable }
+```
+Data type: 
+- `String`: Must be String 
+- `Stringable`: String or null
+- `Number`: Must be Number
+- `Numberable`: Number or null
+- `Boolean`: Must be Boolean
+- `Booleanable`: Boolean or null
+- `Array`: Must be Array
+- `Arrayable`: Array or null
+- `Object`: Must be Object
+- `Objectable`: Object or null 
+- `Dateable`: Date or null
+- `Date`: Must be Date
+- `RegExp`: Must be Regex expression which match string
+- `RegExpable`: Regex expression or null
+- `Any`: no check
 
 ### Tech
 
