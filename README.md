@@ -73,7 +73,9 @@ $ npm run gen "PROJECT NAME"
      - `Objectable`: Object or null 
      - `Dateable`: Date or null
      - `Date`: Must be Date
-     - `Whatever`: no check
+     - `RegExp`: Must be Regex expression which match string
+     - `RegExpable`: Regex expression or null
+     - `Any`: no check
 
 ### Tech
 
