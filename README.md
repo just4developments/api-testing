@@ -88,7 +88,17 @@ Check array or object EQUALS another
   ] 
 }
 or 
-{ equals: {id: 1, name: 'thanh', age: 20 } }
+{ 
+  equals: {
+    id: 1, 
+    name: 'thanh', 
+    age: 20 
+  }, 
+  _apply: {
+    birthday: new Date(2016,1 ,1), // append field in equals object
+    age: Remove // Remove field age in object equals. This will help if you use variable in checker, you can manual append or remove some fields in it
+  } 
+}
 ```
 
 Check array or object NOT EQUALS another
