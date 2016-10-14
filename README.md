@@ -158,11 +158,11 @@ or
 
 Check data type is INSTANCE OF the type
 ```
-{ instanceof: String }
+{ equals: String }
 or 
-{ instanceof: /\d+/ }
+{ equals: /\d+/ }
 or 
-{ instanceof: Dateable }
+{ equals: Dateable }
 or 
 { id: Number, name: Stringable, birthday: Dateable }
 ```
@@ -181,7 +181,10 @@ Data type:
 - `Date`: Must be Date
 - `RegExp`: Must be Regex expression which match string
 - `RegExpable`: Regex expression or null
-- `Length(5)`: Check array or string length must be 5 or something else
+- `Length(5)`: Check array or string length must be = 5
+- `Length(1, 4)`: Check array or string length must be >=1 and <=4
+- `Length(Any, 4)`: Check array or string length must be <= 4
+- `Length(4, Any)`: Check array or string length must be >=4
 - `Any`: no check
 
 ### Tech
