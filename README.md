@@ -181,6 +181,7 @@ Data type:
 - `Date`: Must be Date
 - `RegExp`: Must be Regex expression which match string
 - `RegExpable`: Regex expression or null
+- `Length(5)`: Check array or string length must be 5 or something else
 - `Any`: no check
 
 ### Tech
