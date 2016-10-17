@@ -103,13 +103,13 @@ or
 
 Check array or object NOT EQUALS another
 ```
-{ '!equals': [
+{ notEquals: [
     {id: 1, name: 'thanh', age: 20 },
     {id: 2, name: 'bill', age: 22 },
   ] 
 }
 or 
-{ '!equals': {id: 1, name: 'thanh', age: 20 } }
+{ notEquals: {id: 1, name: 'thanh', age: 20 } }
 ```
 
 Check array CONTAINS other object or array
@@ -125,13 +125,13 @@ or
 
 Check array is NOT CONTAINS other object or array
 ```
-{ '!contains': [
+{ notContains: [
     {id: 1, name: 'thanh', age: 20 },
     {id: 2, name: 'bill', age: 22 },
   ] 
 }
 or 
-{ '!contains': {id: 1, name: 'thanh', age: 20 } }
+{ notContains: {id: 1, name: 'thanh', age: 20 } }
 ```
 
 Check array, object IN other array
@@ -147,13 +147,13 @@ or
 
 Check array, object NOT IN other array
 ```
-{ '!in': [
+{ notIn: [
     {id: 1, name: 'thanh', age: 20 },
     {id: 2, name: 'bill', age: 22 },
   ] 
 }
 or 
-{ '!in': {id: 1, name: 'thanh', age: 20 } }
+{ notIn: {id: 1, name: 'thanh', age: 20 } }
 ```
 
 Check data type is INSTANCE OF the type

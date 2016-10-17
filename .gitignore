@@ -1,5 +1,3 @@
 node_modules/
-projects/whatseat/_main.js
-projects/whatseat/output
-projects/*.default
+projects/
 npm-debug.log*
