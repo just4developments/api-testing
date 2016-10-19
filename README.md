@@ -58,7 +58,30 @@ $ npm run gen "PROJECT NAME"
 ### Version
 
  - 1.0.0 : Initial
- - 1.0.2 : Add check data type function. You can use `instanceof` to validate data type. 
+ - 1.0.2 : Add check data type function. You can use `instanceof` to validate data type.
+ - 1.0.3 : Integrated instanceof into equals. Add more function in utils.now, utils.hash..., _ignoreUndefined
+
+### utils function
+
+utils.now(): Return date data
+```
+{ date : ${utils.now()} } // date field value is now, data type is Date
+or 
+{ date: ${utils.now(1000*60*60*24)} } // date field value is now + 24 hours
+or
+{ date: ${utils.now(-1000*60*60*24)} } // date field value is now - 24 hours
+or
+{ date: ${utils.now(2015, 10, 11, 5, 6, 7)} } // date field value is Nov 11, 2015 5hours: 6min: 7sec. (hour, min, sec is optional)
+```
+
+utils.hash: encode, decode Base64, md5
+```
+{ password: utils.hash.md5('mypassword')} // return string md5 "34819d7beeabb9260a5c854bc85b3e44"
+or
+{ password: utils.hash.base64.encode('mypassword')} // return base64 encoding string "bXlwYXNzd29yZA=="
+or
+{ password: utils.hash.base64.decode('bXlwYXNzd29yZA==')} // return base64 decoding string "mypassword"
+```
 
 ### Checker function
 
