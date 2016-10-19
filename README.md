@@ -97,7 +97,8 @@ or
   _apply: {
     birthday: new Date(2016,1 ,1), // append field in equals object
     age: Remove // Remove field age in object equals. This will help if you use variable in checker, you can manual append or remove some fields in it
-  } 
+  },
+  _ignoreUndefined: true, // to ignore compare undefined value
 }
 ```
 
