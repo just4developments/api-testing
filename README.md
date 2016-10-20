@@ -56,10 +56,10 @@ $ npm run gen "PROJECT NAME"
  - After test ok, export to HTML doc
 
 ### Version
-
- - 1.0.0 : Initial
- - 1.0.2 : Add check data type function. You can use `instanceof` to validate data type.
+ - 1.0.4 : Replace checker size to { equals: Length(?, ?) }
  - 1.0.3 : Integrated instanceof into equals. Add more function in utils.now, utils.hash..., _ignoreUndefined
+ - 1.0.2 : Add check data type function. You can use `instanceof` to validate data type.
+ - 1.0.0 : Initial 
 
 ### utils function
 
@@ -94,13 +94,12 @@ or
 
 Check response size (Array or string)
 ```
-{ size: 10 }
+{ equals: Length(10) }
 or 
-{ size: { '=': 10} }
-{ size: { '>': 10} }
-{ size: { '>=': 10} }
-{ size: { '<': 10} }
-{ size: { '<=': 10} }
+{ equals: Length(Any, 10) } // value must be <= 10
+{ equals: Length(10, Any) } // value must be >= 10
+{ equals: Length(1, 10) } // value must be >=1 and <= 10
+{ equals: Length(Any, Any) } // value can be anything
 ```
 
 Check array or object EQUALS another
